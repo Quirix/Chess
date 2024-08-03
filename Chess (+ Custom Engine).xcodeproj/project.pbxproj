@@ -15,6 +15,7 @@
 		3EBC7D8829C5061300B57ADF /* BoardPosition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3EDD0B8D29C4FA2100D9FDA5 /* BoardPosition.cpp */; };
 		3EBC7D8A29C5068E00B57ADF /* FUNCTIONS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3EBC7D8929C5068E00B57ADF /* FUNCTIONS.cpp */; };
 		3EBC7D8C29C507DE00B57ADF /* GLOBAL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3EBC7D8B29C507DE00B57ADF /* GLOBAL.cpp */; };
+		3EE049162C5EC7950078E52E /* VirtualBoard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3EE049142C5EC7950078E52E /* VirtualBoard.cpp */; };
 		3EF700692C24AD2300C73ED6 /* libsfml-audio.2.6.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3EF700642C24AD2200C73ED6 /* libsfml-audio.2.6.1.dylib */; };
 		3EF7006A2C24AD2300C73ED6 /* libsfml-audio.2.6.1.dylib in Embed Libraries */ = {isa = PBXBuildFile; fileRef = 3EF700642C24AD2200C73ED6 /* libsfml-audio.2.6.1.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		3EF7006B2C24AD2300C73ED6 /* libsfml-graphics.2.6.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3EF700652C24AD2200C73ED6 /* libsfml-graphics.2.6.1.dylib */; };
@@ -89,6 +90,8 @@
 		3EDD0B8829C4F7CE00D9FDA5 /* Piece.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Piece.cpp; sourceTree = "<group>"; };
 		3EDD0B8B29C4F91A00D9FDA5 /* Square.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Square.cpp; sourceTree = "<group>"; };
 		3EDD0B8D29C4FA2100D9FDA5 /* BoardPosition.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BoardPosition.cpp; sourceTree = "<group>"; };
+		3EE049142C5EC7950078E52E /* VirtualBoard.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = VirtualBoard.cpp; sourceTree = "<group>"; };
+		3EE049152C5EC7950078E52E /* VirtualBoard.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = VirtualBoard.hpp; sourceTree = "<group>"; };
 		3EF700642C24AD2200C73ED6 /* libsfml-audio.2.6.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libsfml-audio.2.6.1.dylib"; path = "../../../../../opt/homebrew/Cellar/sfml/2.6.1/lib/libsfml-audio.2.6.1.dylib"; sourceTree = "<group>"; };
 		3EF700652C24AD2200C73ED6 /* libsfml-graphics.2.6.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libsfml-graphics.2.6.1.dylib"; path = "../../../../../opt/homebrew/Cellar/sfml/2.6.1/lib/libsfml-graphics.2.6.1.dylib"; sourceTree = "<group>"; };
 		3EF700662C24AD2200C73ED6 /* libsfml-network.2.6.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libsfml-network.2.6.1.dylib"; path = "../../../../../opt/homebrew/Cellar/sfml/2.6.1/lib/libsfml-network.2.6.1.dylib"; sourceTree = "<group>"; };
@@ -173,6 +176,7 @@
 		3EBC7D8E29C5091A00B57ADF /* C++ FILES */ = {
 			isa = PBXGroup;
 			children = (
+				3EE049142C5EC7950078E52E /* VirtualBoard.cpp */,
 				3E14614E29D09BF800FA9818 /* Notate.cpp */,
 				3EBC7D8929C5068E00B57ADF /* FUNCTIONS.cpp */,
 				3EDD0B8829C4F7CE00D9FDA5 /* Piece.cpp */,
@@ -187,6 +191,7 @@
 		3EDD0B8A29C4F88B00D9FDA5 /* HEADER */ = {
 			isa = PBXGroup;
 			children = (
+				3EE049152C5EC7950078E52E /* VirtualBoard.hpp */,
 				3E14615229D0B7A000FA9818 /* Move.hpp */,
 				3E14614F29D09BF800FA9818 /* Notate.hpp */,
 				3EDD0B8229C4F39A00D9FDA5 /* FUNCTIONS.h */,
@@ -260,6 +265,7 @@
 				3EBC7D8729C5061300B57ADF /* Square.cpp in Sources */,
 				3E101AFB29C8BF63002E7E03 /* main.cpp in Sources */,
 				3EBC7D8A29C5068E00B57ADF /* FUNCTIONS.cpp in Sources */,
+				3EE049162C5EC7950078E52E /* VirtualBoard.cpp in Sources */,
 				3EBC7D8829C5061300B57ADF /* BoardPosition.cpp in Sources */,
 				3E14615029D09BF800FA9818 /* Notate.cpp in Sources */,
 				3EBC7D8C29C507DE00B57ADF /* GLOBAL.cpp in Sources */,

@@ -227,60 +227,61 @@ void Piece::Update() {
     
 }
 
-bool Piece::OnMouseRelease() {
+bool Piece::OnMouseRelease(bool isTurn = true) {
     
     if (OldSquare) OldSquare->rec->setFillColor(OldSquare->defaultColor);
     
-    if (IsBeingDragged) {
-        
-        // no idea how setOrigin works but it does, search for it later
-        rec->setOrigin(0, 0);
-        IsBeingDragged = false;
-        
-        Square* b = nullptr;
-        
-        b = SquareTouchingMouse();
-        
-        
-        // if DissallowLegalMoves is true then every move is legal regardless of the things below
-        // currently doesent work though
-        bool islegal = DissallowLegalMoves;
-        
-        Move move;
-        
-        for (auto e : LegalMoves) {
+    if (isTurn) {
+        if (IsBeingDragged) {
             
-            // if SquareTouchingMouse is nullptr e.g mouse outside of window, break
-            if (!b) break;
-            // if SquareTouchingMouse square is on the LegalMoves vector (LegalMoves[0].square) then islegal = true
-            // and set the move variable to that legal move.
-            if (e.square == b) { islegal = true; move = e; break; }
+            // no idea how setOrigin works but it does, search for it later
+            rec->setOrigin(0, 0);
+            IsBeingDragged = false;
+            
+            Square* b = nullptr;
+            
+            b = SquareTouchingMouse();
+            
+            
+            // if DissallowLegalMoves is true then every move is legal regardless of the things below
+            // currently doesent work though
+            bool islegal = DissallowLegalMoves;
+            
+            Move move;
+            
+            for (auto e : LegalMoves) {
+                
+                // if SquareTouchingMouse is nullptr e.g mouse outside of window, break
+                if (!b) break;
+                // if SquareTouchingMouse square is on the LegalMoves vector (LegalMoves[0].square) then islegal = true
+                // and set the move variable to that legal move.
+                if (e.square == b) { islegal = true; move = e; break; }
+            }
+            
+            // if not legal then -> move to it's square that it is right now
+            if (!islegal) {
+                
+                Move a = {OnSquare};
+                
+                MoveTo(a);
+                return false;
+            }
+            
+            MoveTo(move);
+            
+            /*
+               piece moves, and this if statement below says that if
+               piececolor is white (1) and checking is black to white (1)
+               and the opposite, then the checking variable is set to nocheck.
+            */
+            
+            if (type == KING && (int)piececolor == (int) Checking)
+                Checking = NOCHECK; // if legalmoves work then this works too
+            
+            return true;
+            
         }
-        
-        // if not legal then -> move to it's square that it is right now
-        if (!islegal) {
-            
-            Move a = {OnSquare};
-            
-            MoveTo(a);
-            return false;
-        }
-        
-        MoveTo(move);
-        
-        /*
-           piece moves, and this if statement below says that if
-           piececolor is white (1) and checking is black to white (1)
-           and the opposite, then the checking variable is set to nocheck.
-        */
-        
-        if (type == KING && (int)piececolor == (int) Checking)
-            Checking = NOCHECK; // if legalmoves work then this works too
-        
-        return true;
-        
     }
-    
     
     
     return false;

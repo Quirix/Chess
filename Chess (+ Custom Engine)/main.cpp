@@ -80,7 +80,7 @@ int main(){
                     
                     for (auto* element : PiecesVector)
                     {
-                        element->OnMousePress( (element->piececolor == Turn) );
+                        element->OnMousePress( ((element->piececolor == Turn) || !TakeTurns) );
                     }
                     for (auto* element : BoardVector) element->OnMousePressEventHandler();
                 } break;
@@ -120,11 +120,11 @@ int main(){
                     }
                     
                     for (auto* element : PiecesVector) {
-                        if (element->piececolor == Turn) {
-                            if (element->OnMouseRelease())
-                                Turn = (PieceColor) -Turn;
-                        }
+                        if (element->OnMouseRelease( ((element->piececolor == Turn) || !TakeTurns) ))
+                            Turn = (PieceColor) -Turn;
+                        
                     }
+                    
                     for (auto* element : BoardVector) element->OnMouseReleaseEventHandler();
                     
                 }  break;
@@ -141,7 +141,7 @@ int main(){
                         KeySentence += (char) (97 + key); // 97+0 = a
                         
                         if (KeySentence == "d" || KeySentence == "destroy") {
-                            Piece* holdpiece = SquareTouchingMouse()->HoldingPiece;
+                            Piece* holdpiece = ( (SquareTouchingMouse()) ? SquareTouchingMouse()->HoldingPiece : nullptr);
                             
                             if (!holdpiece) break;
                             

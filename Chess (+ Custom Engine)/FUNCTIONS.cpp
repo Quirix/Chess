@@ -144,6 +144,7 @@ int NotationToNumber(char CharacterCordiante, int NumberCordiante) {
     
 }
 
+//* makes changes to global variables such as boardvector and or uses them.
 void SetUpBoardVector() {
     
     int breaks = 0;
@@ -235,6 +236,7 @@ bool CanTake(Piece* attacker,Piece* piece2) { // WARNING: NOT CONSIDERING: PINS,
     return false;
 }
 
+//* makes changes to global variables such as boardvector and or uses them.
 Square* wcCordinateToSquare(BoardPositionNotation n) { // wc standing for with check
     for (auto* v : *BoardVector) {
         if (v->BoardPosition_notation.PrintOutString() == n.PrintOutString()) return v;
@@ -271,6 +273,7 @@ Square* PL(BoardPositionNotation pos, int a, int b) {
     return CordinateToSquare( BoardPositionNotation( (char) (pos.characterCordinate+a), pos.numberCordinate+b));
 }
 
+//* makes changes to global variables such as boardvector and or uses them.
 bool canTakeBlackKingAll(){
     for (auto* e : *PiecesVector)
     {
@@ -279,6 +282,7 @@ bool canTakeBlackKingAll(){
     
     return false;
 }
+//* makes changes to global variables such as boardvector and or uses them.
 bool canTakeWhiteKingAll(){
     for (auto* e : *PiecesVector)
     {
@@ -288,6 +292,7 @@ bool canTakeWhiteKingAll(){
     return false;
 }
 
+//* makes changes to global variables such as boardvector and or uses them.
 void putPiecesInBoard()
 {
     for (int i = 0 ; i < 8; i++) {
@@ -316,6 +321,7 @@ void putPiecesInBoard()
     }
 }
 
+//* makes changes to global variables such as boardvector and or uses them.
 bool doPieceTypeAllContain(PieceColor piececolor, Square* sqr){
     
     for (auto* piece : *PiecesVector)

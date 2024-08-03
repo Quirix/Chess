@@ -13,8 +13,8 @@ bool DissallowLegalMoves = false;
 // set to true if you want every move to be legal
 // current broken :: doesent work
 
-bool TakeTurns = true;
-bool CanCreate = false;
-bool Serious = true; // non-debug
+bool TakeTurns = false;
+bool CanCreate = true;
+bool Serious = false; // non-debug
 
 Check Checking = NOCHECK;

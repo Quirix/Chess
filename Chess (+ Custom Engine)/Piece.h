@@ -70,7 +70,7 @@ public:
     bool CanTakeOppositeKing();
     
     void OnMousePress(bool);
-    bool OnMouseRelease();
+    bool OnMouseRelease(bool);
     
     void Update();
     void draw();
