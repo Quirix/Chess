@@ -154,6 +154,13 @@ void Piece::MoveTo(Move& var_square, bool future) {
     //std::cout << "equation3: " << recpos.x + (recsize.x - rec->getSize().x) / 2 << '\n';
     //##debug
     
+    
+    
+    // *****
+    // huge problem to fix is with future
+    // do what i did with tictactoe
+    // *****
+    
     if (!future) rec->setPosition( recpos.x/* + (recsize.x - rec->getSize().x) /2*/ , recpos.y + 5);
     OnSquare = var_square.square;
     var_square.square->UpdateHoldingPiece(this);
@@ -230,9 +237,6 @@ bool Piece::OnMouseRelease() {
         rec->setOrigin(0, 0);
         IsBeingDragged = false;
         
-        //if (hoveringIconSprite) delete hoveringIconSprite;
-        
-        //hoveringIconSprite = nullptr;
         Square* b = nullptr;
         
         b = SquareTouchingMouse();
@@ -263,8 +267,16 @@ bool Piece::OnMouseRelease() {
         }
         
         MoveTo(move);
+        
+        /*
+           piece moves, and this if statement below says that if
+           piececolor is white (1) and checking is black to white (1)
+           and the opposite, then the checking variable is set to nocheck.
+        */
+        
         if (type == KING && (int)piececolor == (int) Checking)
-            Checking = NOCHECK;
+            Checking = NOCHECK; // if legalmoves work then this works too
+        
         return true;
         
     }
@@ -334,8 +346,7 @@ void Piece::draw() {
 }
 
 Piece::~Piece() {
-    if (hoveringIconTexture != nullptr) delete hoveringIconTexture;
-    if (hoveringIconSprite) delete hoveringIconSprite;
+    if (hoveringIconTexture) delete hoveringIconTexture;
     if (rec) delete rec;
     if (OnSquare) OnSquare->rec->setFillColor(OnSquare->defaultColor);
     
@@ -364,17 +375,15 @@ void Piece::UpdateLegalMoves() {
 
     LegalMoves.clear(); // MAY MESSUP WITH BOARDFLIP
     
-    if (type == PAWN) // DISREGARDING CHECK, NO EN PESSANT
+    if (type == PAWN) // DISREGARDING CHECK
     
     {
-        
         Move s1 = Move{PL(pos, 0, (int)piececolor)} ;
         Move s2 = Move(PL(pos, 1, (int)piececolor), TAKE); // left
         Move s3 = Move(PL(pos, -1, (int)piececolor), TAKE); // right
         
         Square* s4{}; // double pawn forward
-        // Move* s5 = nullptr; // en pessant: create vector to keep track of moves that happened // NOT DONE
-        // LEFT UNDONE, FOR LATER
+        // Move* s5 = nullptr; // en pessant
         
         if (
 
@@ -469,7 +478,7 @@ void Piece::UpdateLegalMoves() {
             
             if (!e.square) continue;
             
-            if (e.square->HoldingPiece!=nullptr && !CanTake(this, e.square->HoldingPiece)) continue;
+            if (e.square->HoldingPiece && !CanTake(this, e.square->HoldingPiece)) continue;
             
             if (e.square->HoldingPiece && CanTake(this, e.square->HoldingPiece)) e.type = TAKE;
             
