@@ -18,6 +18,7 @@
 #include "FUNCTIONS.h"
 #include "GLOBAL.h"
 #include "Notate.hpp"
+#include "VirtualBoard.hpp"
 
 #define makro &window, &BoardVector, &PiecesVector, &History
 #define bpn BoardPositionNotation
@@ -38,7 +39,6 @@ int main(){
     vector<Square*> BoardVector{};
     
     vector<Notate*> History{};
-    
     
     AssignStuff(makro);
     SetUpBoardVector();
@@ -255,10 +255,15 @@ int main(){
         //cout << '\n';
         //std::cout << (int) Checking << '\n';
         //std::cout << PiecesVector.size() << '\n';
+        
+        
+        
         //##debug###
         
         for (auto* element : BoardVector) element->update();
         for (auto* element : PiecesVector) element->Update();
+        
+        
         
         window.clear();
         

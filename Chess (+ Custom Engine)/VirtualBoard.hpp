@@ -5,9 +5,35 @@
 //  Created by Quirix Wastaken on 3/8/24.
 //
 
-#ifndef VirtualBoard_hpp
-#define VirtualBoard_hpp
+#pragma once
 
-#include <stdio.h>
+#include "array"
 
-#endif /* VirtualBoard_hpp */
+#include "GLOBAL.h"
+
+
+class VirtualBoard {
+public:
+    
+    // NOTE: (int) PieceType == (board array white pieces int number) -1
+    
+    std::array <int, 64> boardarray;
+    
+    /* for boardarray:
+     
+     1 = white pawn
+     2 = white bishop
+     3 = white knight
+     4 = white rook
+     5 = white queen
+     6 = whiteking
+     -1 = black pawn
+     -2 = black bishop
+     -3 = black knight
+      etc.
+     
+     */
+    
+    void putPiece(int, PieceType, PieceColor);
+    
+};
