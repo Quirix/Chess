@@ -273,6 +273,11 @@ Square* PL(BoardPositionNotation pos, int a, int b) {
     return CordinateToSquare( BoardPositionNotation( (char) (pos.characterCordinate+a), pos.numberCordinate+b));
 }
 
+int PL(int boardIndex, int a, int b) {
+    std::cout << a << '\n';
+    return 0;
+}
+
 //* makes changes to global variables such as boardvector and or uses them.
 bool canTakeBlackKingAll(){
     for (auto* e : *PiecesVector)
@@ -369,6 +374,323 @@ void UpdateLegalMoves(std::vector<Move>& LegalMoves, Piece* pc, std::vector<Nota
                                                                                                                                    ) {
                                                                                                                                        
                                                                                                                                        
+                if (piececolor == WHITE) {
+                    if (pos.numberCordinate == 2) {
+                                                                                                                                                
+                        s4 = PL(pos, 0, 2);
+                        LegalMoves.push_back( Move{s4, MOVE, DOUBLEFORWARD});
+                        
+                    }
+                }
+                    
+                else {
+                    if (pos.numberCordinate == 7) {
+                        s4 = PL(pos, 0, -2);
+                        LegalMoves.push_back(   Move{s4,MOVE,DOUBLEFORWARD } );
+
+                    }
+                    
+                }
+
+                                                                                                                                       
+            // lmao i accidentaly typed elseif i was trying to type else then if but i discovered ooga booga its the same thin
+        }
+        
+        // -----
+        
+        // EN PESSANT
+        
+        Notate* LatestNotate = nullptr; // works like a charm (no joke actually)
+        
+         
+        if ( history->size() != 0) LatestNotate = (history->at(history->size()-1) );
+                                                    // last position
+        
+        if (LatestNotate && LatestNotate->piece &&
+            LatestNotate->NoT != CREATE &&
+            LatestNotate->NoT != REMOVE &&
+            (LatestNotate->piece->piececolor != piececolor) &&
+            (LatestNotate->ADD == DOUBLEFORWARD) &&
+
+
+            
+            (
+            ( PL(pos, 1, 0) && (PL(pos, 1, 0)->BoardPosition_notation == LatestNotate->To->BoardPosition_notation) ) ||
+            ( PL(pos, -1, 0) && (PL(pos, -1, 0)->BoardPosition_notation == LatestNotate->To->BoardPosition_notation) )
+            )
+            
+            )
+        
+        {
+            LegalMoves.push_back( Move{PL(LatestNotate->To->BoardPosition_notation, 0, piececolor), TAKE, PESSANT  } );
+        }
+        
+        
+        
+        // * //
+            //if (LatestNotate) LatestNotate->print();
+        // * //
+        
+        // ----
+          
+                                       
+        if (s1.square && s1.square->HoldingPiece == nullptr) LegalMoves.push_back(s1);
+        if (s2.square && s2.square->HoldingPiece && CanTake(pc, s2.square->HoldingPiece) ) LegalMoves.push_back(s2);
+        if (s3.square &&s3.square->HoldingPiece && CanTake(pc, s3.square->HoldingPiece) ) LegalMoves.push_back(s3);
+        
+                                       
+    }
+    
+    else if (type == KNIGHT) {
+        
+        vector<Move> legals = {
+            PL(pos, 1, 2),
+            PL(pos, -1, 2),
+            PL(pos, 2, 1),
+            PL(pos, -2, -1),
+            PL(pos, -2, 1),
+            PL(pos, 1, -2),
+            PL(pos, -1, -2),
+            PL(pos, 2, -1)
+        };
+        
+        for (auto e : legals) {
+            
+            if (!e.square) continue;
+            
+            if (e.square->HoldingPiece && !CanTake(pc, e.square->HoldingPiece)) continue;
+            
+            if (e.square->HoldingPiece && CanTake(pc, e.square->HoldingPiece)) e.type = TAKE;
+            
+            LegalMoves.push_back(e);
+        }
+        
+    }
+    
+    else if (type == BISHOP) {
+        vector<Move> legals{};
+        
+        for (int direction = 1; direction <= 4; direction++) {
+            
+            int a = (direction%2 == 0) ? 1 : -1;
+            int b = (direction <= 2) ? 1 : -1;
+    
+            for (int i = 1 ; true; i++) {
+                
+                int na = a * i;
+                int nb = b * i;
+                
+                if (!PL(pos, na, nb)) break;
+                if ( PL(pos, na, nb)->HoldingPiece != nullptr) {
+                    
+                    if ( CanTake(pc, PL(pos, na,nb)->HoldingPiece)) {
+                        
+                        legals.push_back( {PL(pos, na, nb), TAKE} );
+                    
+                    }
+                    
+                    break;
+                }
+                
+                legals.push_back(PL(pos, na, nb));
+                
+            }
+            
+            
+        }
+        
+        for (auto e : legals)
+        {
+            if (e.square) LegalMoves.push_back(e);
+        }
+    }
+    
+    else if (type == ROOK) {
+        vector<Move> legals{};
+        
+        for (int direction = 1; direction <= 4; direction++) {
+            
+            int a = (direction%2 == 0) ? 0 : ( (direction==1) ? -1 : 1 ) ;
+            int b = (direction%2 != 0) ? 0 : ( (direction==2) ? 1 : -1 ) ;
+    
+            for (int i = 1 ; true; i++) {
+                
+                int na = a * i;
+                int nb = b * i;
+                
+                if (!PL(pos, na, nb)) break;
+                if ( PL(pos, na, nb)->HoldingPiece != nullptr) {
+                    
+                    if ( CanTake(pc, PL(pos, na,nb)->HoldingPiece)) legals.push_back( {PL(pos, na, nb), TAKE} );
+                    
+                    break;
+                }
+                
+                legals.push_back(PL(pos, na, nb));
+                
+            }
+            
+            
+        }
+        
+        for (auto e : legals)
+        {
+            if (e.square) LegalMoves.push_back(e);
+        }
+    }
+    
+    else if (type == QUEEN) {
+        vector<Move> legals{};
+        
+        for (int direction = 1; direction <= 9; direction++) {
+            
+            int a = (direction <= 3) ? -1 : ( (direction <= 6) ? 1 : 0 ) ;
+            int b = (direction == 1 || direction == 4 || direction == 8) ? -1 : ( (direction == 2 || direction == 5 || direction == 7) ? 1 : 0 ) ;
+    
+            for (int i = 1 ; true; i++) {
+                
+                int na = a * i;
+                int nb = b * i;
+                
+                if (!PL(pos, na, nb)) break;
+                if ( PL(pos, na, nb)->HoldingPiece != nullptr) {
+                    
+                    if ( CanTake(pc, PL(pos, na,nb)->HoldingPiece)) legals.push_back( {PL(pos, na, nb), TAKE} );
+                    
+                    break;
+                }
+                
+                legals.push_back(PL(pos, na, nb));
+                
+            }
+            
+            
+        }
+        
+        for (auto e : legals)
+        {
+            if (e.square) LegalMoves.push_back(e);
+        }
+    }
+    
+    else if (type == KING) { // CASTLING NOT IMPLEMENTED
+        vector<Move> legals{};
+        
+        for (int i = 0; i <= 8; i++) {
+            int& direction = i;
+            int a = (direction <= 3) ? -1 : ( (direction <= 6) ? 1 : 0 ) ;
+            int b = (direction == 1 || direction == 4 || direction == 8) ? -1 : ( (direction == 2 || direction == 5 || direction == 7) ? 1 : 0 ) ;
+            
+            Move sqr = PL(pos, a, b);
+            
+            if (!sqr.square) continue;
+            
+            if (sqr.square->HoldingPiece && !CanTake(pc, sqr.square->HoldingPiece)) continue;
+            if (CanTake(pc, sqr.square->HoldingPiece)) sqr.type = TAKE;
+            
+            legals.push_back(sqr);
+            
+        }
+        
+        if (Serious && (Checking == (Check) piececolor) ) // if we are in check
+        {
+            ;
+        }
+        
+        // remove moves that will result in check
+        
+        //* bugged 100 out of 100 percent
+        
+        /*for(int i = 0; i < legals.size(); i++)
+        {
+            std::cout << piececolor << ' ' << i << '\n';
+            Move& e = legals[i];
+            
+            bool canttk = false;
+            
+            //if (piececolor == WHITE) canttk = doPieceTypeAllContain(BLACK, e.square);
+            //else canttk = doPieceTypeAllContain(WHITE, e.square);
+            //std::cout << "canttk = " << canttk << '\n';
+             
+             
+            
+            
+            //FUTURE method doesn't work.
+            
+            MoveTo(e, true);
+            
+            if (piececolor == WHITE)
+                canttk = canTakeWhiteKingAll();
+            if (piececolor == BLACK)
+                canttk = canTakeBlackKingAll();
+            
+            Move moveback = Move{OldSquare};
+            MoveTo(moveback, true);
+            
+            if (canttk == true) {
+                auto it = (legals.begin()+i);
+                legals.erase(it);
+            }
+            
+        }*/
+        
+        for (auto e : legals) {
+            if (e.square) LegalMoves.push_back(e);
+        }
+        
+    }
+    
+    
+    
+}
+
+// return piece type from int form
+PieceType getTypeInf(int inf) {
+    
+    switch (abs(inf))
+    {
+        case 1: return PAWN; break;
+        case 2: return KNIGHT; break;
+        case 3: return BISHOP; break;
+        case 4: return ROOK; break;
+        case 5: return QUEEN; break;
+        case 6: return KING; break;
+        default: {
+            std::cout << "error inf (int form) from function PieceType getTypeInf(int) is not 1-6 or -1 to -6.\n";
+            return PAWN;
+        }
+    }
+}
+
+// returns piece color from int form
+PieceColor getColorInf(int inf) {
+    if (inf > 1) return WHITE;
+    else return BLACK;
+}
+
+// intform stands is piece color and type in integer form
+// (comments how it works in VirtualBoard.hpp)
+void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std::vector<Notate*>* history) {
+
+    LegalMoves.clear(); // MAY MESSUP WITH BOARDFLIP
+    
+    PieceColor piececolor = getColorInf(inf);
+    PieceType type = getTypeInf(inf);
+    
+    int& pos = boardIndex;
+    
+    if (type == PAWN) // DISREGARDING CHECK
+    
+    {
+        int s1 = PL(pos, 0, (int)piececolor) ;
+        int s2 = PL(pos, 1, (int)piececolor); // left (take)
+        int s3 = PL(pos, -1, (int)piececolor); // right (take)
+        
+        int s4{}; // double pawn forward
+        // Move* s5 = nullptr; // en pessant
+        
+        if ( PL(pos, 0, (int)piececolor) == 0 && PL(pos, 0, (int) (piececolor*2)) == 0) {
+    
                 if (piececolor == WHITE) {
                     if (pos.numberCordinate == 2) {
                                                                                                                                                 

@@ -46,6 +46,7 @@ Square* CordinateToSquare(char a,int b);
 Square* wcCordinateToSquare(BoardPositionNotation n);
 
 Square* PL(BoardPositionNotation, int, int);
+int PL(int, int, int);
 
 bool canTakeBlackKingAll();
 bool canTakeWhiteKingAll();
@@ -57,3 +58,12 @@ bool canTakeWhiteKingAll();
 void putPiecesInBoard();
 
 void UpdateLegalMoves(std::vector<Move>&, Piece*, std::vector<Notate*>*);
+
+void UpdateLegalMoves(std::vector<int>&, int, int);
+
+PieceType getTypeInf(int);
+// Inf stands for int form
+
+PieceColor getColorInf(int);
+// Inf stands for int form
+
