@@ -65,7 +65,6 @@ public:
           vector<Piece*>* pv, vector<Notate*>* hs);
     void die(); // use when piece takes piece2, piece2.die();
     void MoveTo(Move& var_square, bool = false);
-    void UpdateLegalMoves();
     
     bool CanTakeOppositeKing();
     

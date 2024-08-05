@@ -328,7 +328,7 @@ bool doPieceTypeAllContain(PieceColor piececolor, Square* sqr){
     {
         
         if (piece->piececolor == piececolor) {
-            if (piece->type != KING) piece->UpdateLegalMoves();
+            if (piece->type != KING) UpdateLegalMoves(piece->LegalMoves, piece, History);
             
             for (auto legalmove : piece->LegalMoves)
             {
@@ -340,3 +340,301 @@ bool doPieceTypeAllContain(PieceColor piececolor, Square* sqr){
     return false;
 }
 
+void UpdateLegalMoves(std::vector<Move>& LegalMoves, Piece* pc, std::vector<Notate*>* history) {
+    
+    BoardPositionNotation& pos = pc->OnSquare->BoardPosition_notation;
+
+    LegalMoves.clear(); // MAY MESSUP WITH BOARDFLIP
+    
+    PieceColor& piececolor = pc->piececolor;
+    PieceType& type = pc->type;
+    
+    if (type == PAWN) // DISREGARDING CHECK
+    
+    {
+        Move s1 = Move{PL(pos, 0, (int)piececolor)} ;
+        Move s2 = Move(PL(pos, 1, (int)piececolor), TAKE); // left
+        Move s3 = Move(PL(pos, -1, (int)piececolor), TAKE); // right
+        
+        Square* s4{}; // double pawn forward
+        // Move* s5 = nullptr; // en pessant
+        
+        if (
+
+            
+            (PL(pos, 0, (int)piececolor) && PL(pos, 0, (int) (piececolor*2) ))
+            
+            && !PL(pos, 0, (int)piececolor)->HoldingPiece && !PL(pos, 0, (int) (piececolor*2))->HoldingPiece
+                                                                                                                                   
+                                                                                                                                   ) {
+                                                                                                                                       
+                                                                                                                                       
+                if (piececolor == WHITE) {
+                    if (pos.numberCordinate == 2) {
+                                                                                                                                                
+                        s4 = PL(pos, 0, 2);
+                        LegalMoves.push_back( Move{s4, MOVE, DOUBLEFORWARD});
+                        
+                    }
+                }
+                    
+                else {
+                    if (pos.numberCordinate == 7) {
+                        s4 = PL(pos, 0, -2);
+                        LegalMoves.push_back(   Move{s4,MOVE,DOUBLEFORWARD } );
+
+                    }
+                    
+                }
+
+                                                                                                                                       
+            // lmao i accidentaly typed elseif i was trying to type else then if but i discovered ooga booga its the same thin
+        }
+        
+        // -----
+        
+        // EN PESSANT
+        
+        Notate* LatestNotate = nullptr; // works like a charm (no joke actually)
+        
+         
+        if ( history->size() != 0) LatestNotate = (history->at(history->size()-1) );
+                                                    // last position
+        
+        if (LatestNotate && LatestNotate->piece &&
+            LatestNotate->NoT != CREATE &&
+            LatestNotate->NoT != REMOVE &&
+            (LatestNotate->piece->piececolor != piececolor) &&
+            (LatestNotate->ADD == DOUBLEFORWARD) &&
+
+
+            
+            (
+            ( PL(pos, 1, 0) && (PL(pos, 1, 0)->BoardPosition_notation == LatestNotate->To->BoardPosition_notation) ) ||
+            ( PL(pos, -1, 0) && (PL(pos, -1, 0)->BoardPosition_notation == LatestNotate->To->BoardPosition_notation) )
+            )
+            
+            )
+        
+        {
+            LegalMoves.push_back( Move{PL(LatestNotate->To->BoardPosition_notation, 0, piececolor), TAKE, PESSANT  } );
+        }
+        
+        
+        
+        // * //
+            //if (LatestNotate) LatestNotate->print();
+        // * //
+        
+        // ----
+          
+                                       
+        if (s1.square && s1.square->HoldingPiece == nullptr) LegalMoves.push_back(s1);
+        if (s2.square && s2.square->HoldingPiece && CanTake(pc, s2.square->HoldingPiece) ) LegalMoves.push_back(s2);
+        if (s3.square &&s3.square->HoldingPiece && CanTake(pc, s3.square->HoldingPiece) ) LegalMoves.push_back(s3);
+        
+                                       
+    }
+    
+    else if (type == KNIGHT) {
+        
+        vector<Move> legals = {
+            PL(pos, 1, 2),
+            PL(pos, -1, 2),
+            PL(pos, 2, 1),
+            PL(pos, -2, -1),
+            PL(pos, -2, 1),
+            PL(pos, 1, -2),
+            PL(pos, -1, -2),
+            PL(pos, 2, -1)
+        };
+        
+        for (auto e : legals) {
+            
+            if (!e.square) continue;
+            
+            if (e.square->HoldingPiece && !CanTake(pc, e.square->HoldingPiece)) continue;
+            
+            if (e.square->HoldingPiece && CanTake(pc, e.square->HoldingPiece)) e.type = TAKE;
+            
+            LegalMoves.push_back(e);
+        }
+        
+    }
+    
+    else if (type == BISHOP) {
+        vector<Move> legals{};
+        
+        for (int direction = 1; direction <= 4; direction++) {
+            
+            int a = (direction%2 == 0) ? 1 : -1;
+            int b = (direction <= 2) ? 1 : -1;
+    
+            for (int i = 1 ; true; i++) {
+                
+                int na = a * i;
+                int nb = b * i;
+                
+                if (!PL(pos, na, nb)) break;
+                if ( PL(pos, na, nb)->HoldingPiece != nullptr) {
+                    
+                    if ( CanTake(pc, PL(pos, na,nb)->HoldingPiece)) {
+                        
+                        legals.push_back( {PL(pos, na, nb), TAKE} );
+                    
+                    }
+                    
+                    break;
+                }
+                
+                legals.push_back(PL(pos, na, nb));
+                
+            }
+            
+            
+        }
+        
+        for (auto e : legals)
+        {
+            if (e.square) LegalMoves.push_back(e);
+        }
+    }
+    
+    else if (type == ROOK) {
+        vector<Move> legals{};
+        
+        for (int direction = 1; direction <= 4; direction++) {
+            
+            int a = (direction%2 == 0) ? 0 : ( (direction==1) ? -1 : 1 ) ;
+            int b = (direction%2 != 0) ? 0 : ( (direction==2) ? 1 : -1 ) ;
+    
+            for (int i = 1 ; true; i++) {
+                
+                int na = a * i;
+                int nb = b * i;
+                
+                if (!PL(pos, na, nb)) break;
+                if ( PL(pos, na, nb)->HoldingPiece != nullptr) {
+                    
+                    if ( CanTake(pc, PL(pos, na,nb)->HoldingPiece)) legals.push_back( {PL(pos, na, nb), TAKE} );
+                    
+                    break;
+                }
+                
+                legals.push_back(PL(pos, na, nb));
+                
+            }
+            
+            
+        }
+        
+        for (auto e : legals)
+        {
+            if (e.square) LegalMoves.push_back(e);
+        }
+    }
+    
+    else if (type == QUEEN) {
+        vector<Move> legals{};
+        
+        for (int direction = 1; direction <= 9; direction++) {
+            
+            int a = (direction <= 3) ? -1 : ( (direction <= 6) ? 1 : 0 ) ;
+            int b = (direction == 1 || direction == 4 || direction == 8) ? -1 : ( (direction == 2 || direction == 5 || direction == 7) ? 1 : 0 ) ;
+    
+            for (int i = 1 ; true; i++) {
+                
+                int na = a * i;
+                int nb = b * i;
+                
+                if (!PL(pos, na, nb)) break;
+                if ( PL(pos, na, nb)->HoldingPiece != nullptr) {
+                    
+                    if ( CanTake(pc, PL(pos, na,nb)->HoldingPiece)) legals.push_back( {PL(pos, na, nb), TAKE} );
+                    
+                    break;
+                }
+                
+                legals.push_back(PL(pos, na, nb));
+                
+            }
+            
+            
+        }
+        
+        for (auto e : legals)
+        {
+            if (e.square) LegalMoves.push_back(e);
+        }
+    }
+    
+    else if (type == KING) { // CASTLING NOT IMPLEMENTED
+        vector<Move> legals{};
+        
+        for (int i = 0; i <= 8; i++) {
+            int& direction = i;
+            int a = (direction <= 3) ? -1 : ( (direction <= 6) ? 1 : 0 ) ;
+            int b = (direction == 1 || direction == 4 || direction == 8) ? -1 : ( (direction == 2 || direction == 5 || direction == 7) ? 1 : 0 ) ;
+            
+            Move sqr = PL(pos, a, b);
+            
+            if (!sqr.square) continue;
+            
+            if (sqr.square->HoldingPiece && !CanTake(pc, sqr.square->HoldingPiece)) continue;
+            if (CanTake(pc, sqr.square->HoldingPiece)) sqr.type = TAKE;
+            
+            legals.push_back(sqr);
+            
+        }
+        
+        if (Serious && (Checking == (Check) piececolor) ) // if we are in check
+        {
+            ;
+        }
+        
+        // remove moves that will result in check
+        
+        //* bugged 100 out of 100 percent
+        
+        /*for(int i = 0; i < legals.size(); i++)
+        {
+            std::cout << piececolor << ' ' << i << '\n';
+            Move& e = legals[i];
+            
+            bool canttk = false;
+            
+            //if (piececolor == WHITE) canttk = doPieceTypeAllContain(BLACK, e.square);
+            //else canttk = doPieceTypeAllContain(WHITE, e.square);
+            //std::cout << "canttk = " << canttk << '\n';
+             
+             
+            
+            
+            //FUTURE method doesn't work.
+            
+            MoveTo(e, true);
+            
+            if (piececolor == WHITE)
+                canttk = canTakeWhiteKingAll();
+            if (piececolor == BLACK)
+                canttk = canTakeBlackKingAll();
+            
+            Move moveback = Move{OldSquare};
+            MoveTo(moveback, true);
+            
+            if (canttk == true) {
+                auto it = (legals.begin()+i);
+                legals.erase(it);
+            }
+            
+        }*/
+        
+        for (auto e : legals) {
+            if (e.square) LegalMoves.push_back(e);
+        }
+        
+    }
+    
+    
+    
+}

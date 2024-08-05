@@ -56,3 +56,4 @@ bool canTakeWhiteKingAll();
 
 void putPiecesInBoard();
 
+void UpdateLegalMoves(std::vector<Move>&, Piece*, std::vector<Notate*>*);
