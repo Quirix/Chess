@@ -256,7 +256,13 @@ int main(){
         //std::cout << (int) Checking << '\n';
         //std::cout << PiecesVector.size() << '\n';
         
+        VirtualBoard vb;
         
+        vb.putPiece(1, KING, WHITE);
+        
+        for (auto e : vb.boardarray) {
+            std::cout << e;
+        } std::cout << '\n';
         
         //##debug###
         

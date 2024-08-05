@@ -15,15 +15,15 @@
 class VirtualBoard {
 public:
     
-    // NOTE: (int) PieceType == (board array white pieces int number) -1
+    // NOTE: (int) PieceType == (board array white pieces int number) - 1
     
-    std::array <int, 64> boardarray;
+    std::array <int, 64> boardarray{};
     
     /* for boardarray:
      
      1 = white pawn
-     2 = white bishop
-     3 = white knight
+     2 = white knight
+     3 = white bishop
      4 = white rook
      5 = white queen
      6 = whiteking
@@ -35,5 +35,7 @@ public:
      */
     
     void putPiece(int, PieceType, PieceColor);
+    
+    void pullPiece(int);
     
 };
