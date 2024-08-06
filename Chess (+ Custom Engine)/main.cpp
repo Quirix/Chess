@@ -262,7 +262,7 @@ int main(){
         
         /*for (auto e : vb.boardarray) {
             std::cout << e;
-        } std::cout << '\n';*/
+        } std::cout << '\n';*/ 
         
         //##debug###
         
