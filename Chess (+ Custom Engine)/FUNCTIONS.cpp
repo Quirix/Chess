@@ -9,6 +9,7 @@
 #include "Square.h"
 #include "FUNCTIONS.h"
 #include "Notate.hpp"
+#include "LNotate.hpp"
 
 #define makro window, BoardVector, PiecesVector, History
 
@@ -670,7 +671,7 @@ PieceColor getColorInf(int inf) {
 
 // intform stands is piece color and type in integer form
 // (comments how it works in VirtualBoard.hpp)
-void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std::vector<Notate*>* history) {
+void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std::vector<LNotate*>* history, const std::array<int, 64>& intBoard) {
 
     LegalMoves.clear(); // MAY MESSUP WITH BOARDFLIP
     
@@ -712,23 +713,20 @@ void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std
         
         // EN PESSANT
         
-        Notate* LatestNotate = nullptr; // works like a charm (no joke actually)
+        LNotate* LatestNotate = nullptr; // works like a charm (no joke actually)
         
          
         if ( history->size() != 0) LatestNotate = (history->at(history->size()-1) );
                                                     // last position
         
-        if (LatestNotate && LatestNotate->piece &&
-            LatestNotate->NoT != CREATE &&
-            LatestNotate->NoT != REMOVE &&
-            (LatestNotate->piece->piececolor != piececolor) &&
-            (LatestNotate->ADD == DOUBLEFORWARD) &&
+        if (getColorInf( (LatestNotate->inf) != piececolor) )  &&
+            (LatestNotate->special == DOUBLEFORWARD) &&
 
 
             
             (
-            ( PL(pos, 1, 0) && (PL(pos, 1, 0)->BoardPosition_notation == LatestNotate->To->BoardPosition_notation) ) ||
-            ( PL(pos, -1, 0) && (PL(pos, -1, 0)->BoardPosition_notation == LatestNotate->To->BoardPosition_notation) )
+            ( (PL(pos, 1, 0) == LatestNotate->To) ) ||
+            ( (PL(pos, -1, 0) == LatestNotate->To) )
             )
             
             )
@@ -745,9 +743,9 @@ void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std
         
         // ----
           
-                                       
-        if (s1.square && s1.square->HoldingPiece == nullptr) LegalMoves.push_back(s1);
-        if (s2.square && s2.square->HoldingPiece && CanTake(pc, s2.square->HoldingPiece) ) LegalMoves.push_back(s2);
+        
+        if (intBoard[s1] == 0) LegalMoves.push_back(s1);
+        if (intBoard[s2] != 0 && CanTake(pc, s2.square->HoldingPiece) ) LegalMoves.push_back(s2);
         if (s3.square &&s3.square->HoldingPiece && CanTake(pc, s3.square->HoldingPiece) ) LegalMoves.push_back(s3);
         
                                        

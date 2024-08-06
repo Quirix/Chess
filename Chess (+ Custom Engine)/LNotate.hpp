@@ -8,6 +8,7 @@
 #pragma once
 
 #include <array>
+#include "GLOBAL.h"
 
 // LNotate = Light Notate
 class LNotate {
@@ -22,15 +23,16 @@ public:
      DOUBLEFORWARD = 3
      */
     
-    int spNInf; // special + int form
+    AddNoT special;
+    int inf; // int form
     
     int From; // on board index
     int To; // on board index
     
-    LNotate(int, int, int);
+    LNotate(AddNoT, int, int, int);
     
     void print();
-    std::array<int, 3> sprint();
+    std::array<int, 4> sprint();
     
     bool operator==(const LNotate&);
 };

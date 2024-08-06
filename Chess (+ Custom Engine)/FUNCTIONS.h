@@ -59,7 +59,7 @@ void putPiecesInBoard();
 
 void UpdateLegalMoves(std::vector<Move>&, Piece*, std::vector<Notate*>*);
 
-void UpdateLegalMoves(std::vector<int>&, int, int);
+void UpdateLegalMoves(std::vector<int>&, int, int, const std::array<int, 64>&);
 
 PieceType getTypeInf(int);
 // Inf stands for int form
