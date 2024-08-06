@@ -745,15 +745,15 @@ void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std
           
         
         if (intBoard[s1] == 0) LegalMoves.push_back(s1);
-        if (intBoard[s2] != 0 && CanTake(pc, s2.square->HoldingPiece) ) LegalMoves.push_back(s2);
-        if (s3.square &&s3.square->HoldingPiece && CanTake(pc, s3.square->HoldingPiece) ) LegalMoves.push_back(s3);
+        if (intBoard[s2] != 0 && CanTake(boardIndex, inf, s2, intBoard[s2]) ) LegalMoves.push_back(s2);
+        if ( intBoard[s3] != 0 && CanTake(boardIndex, inf, s3, intBoard[s3]) ) LegalMoves.push_back(s3);
         
                                        
     }
     
     else if (type == KNIGHT) {
         
-        vector<Move> legals = {
+        std::array<int, 8> legals = {
             PL(pos, 1, 2),
             PL(pos, -1, 2),
             PL(pos, 2, 1),
@@ -766,11 +766,11 @@ void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std
         
         for (auto e : legals) {
             
-            if (!e.square) continue;
+            if (e == -1) continue; // if it goes outside of board.
             
-            if (e.square->HoldingPiece && !CanTake(pc, e.square->HoldingPiece)) continue;
+            if (intBoard[e] != 0 && !CanTake(boardIndex, intBoard[boardIndex], e, intBoard[e])) continue;
             
-            if (e.square->HoldingPiece && CanTake(pc, e.square->HoldingPiece)) e.type = TAKE;
+            //if (intBoard[e] && CanTake(boardIndex, intBoard[boardIndex], e, intBoard[e])) e.type = TAKE;
             
             LegalMoves.push_back(e);
         }
@@ -778,7 +778,7 @@ void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std
     }
     
     else if (type == BISHOP) {
-        vector<Move> legals{};
+        vector<int> legals{};
         
         for (int direction = 1; direction <= 4; direction++) {
             
@@ -791,11 +791,11 @@ void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std
                 int nb = b * i;
                 
                 if (!PL(pos, na, nb)) break;
-                if ( PL(pos, na, nb)->HoldingPiece != nullptr) {
+                if ( intBoard[PL(pos, na, nb)] != 0) {
                     
-                    if ( CanTake(pc, PL(pos, na,nb)->HoldingPiece)) {
+                    if ( CanTake(boardIndex, intBoard[boardIndex], PL(pos, na,nb), intBoard[PL(pos, na,nb)])) {
                         
-                        legals.push_back( {PL(pos, na, nb), TAKE} );
+                        legals.push_back(PL(pos, na, nb));
                     
                     }
                     
@@ -811,12 +811,12 @@ void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std
         
         for (auto e : legals)
         {
-            if (e.square) LegalMoves.push_back(e);
+            if (e != -1) LegalMoves.push_back(e);
         }
     }
     
     else if (type == ROOK) {
-        vector<Move> legals{};
+        vector<int> legals{};
         
         for (int direction = 1; direction <= 4; direction++) {
             
@@ -828,10 +828,10 @@ void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std
                 int na = a * i;
                 int nb = b * i;
                 
-                if (!PL(pos, na, nb)) break;
-                if ( PL(pos, na, nb)->HoldingPiece != nullptr) {
+                if (PL(pos, na, nb) == -1) break;
+                if ( intBoard[PL(pos, na, nb)] != 0) {
                     
-                    if ( CanTake(pc, PL(pos, na,nb)->HoldingPiece)) legals.push_back( {PL(pos, na, nb), TAKE} );
+                    if ( CanTake(boardIndex, intBoard[boardIndex], PL(pos, na,nb), intBoard[PL(pos, na,nb)])) legals.push_back( PL(pos, na, nb) );
                     
                     break;
                 }
@@ -845,12 +845,12 @@ void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std
         
         for (auto e : legals)
         {
-            if (e.square) LegalMoves.push_back(e);
+            if (e != -1) LegalMoves.push_back(e);
         }
     }
     
     else if (type == QUEEN) {
-        vector<Move> legals{};
+        vector<int> legals{};
         
         for (int direction = 1; direction <= 9; direction++) {
             
@@ -862,10 +862,10 @@ void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std
                 int na = a * i;
                 int nb = b * i;
                 
-                if (!PL(pos, na, nb)) break;
-                if ( PL(pos, na, nb)->HoldingPiece != nullptr) {
+                if (PL(pos, na, nb) == -1) break;
+                if ( intBoard[PL(pos, na, nb)] != 0) {
                     
-                    if ( CanTake(pc, PL(pos, na,nb)->HoldingPiece)) legals.push_back( {PL(pos, na, nb), TAKE} );
+                    if ( CanTake(boardIndex, intBoard[boardIndex], PL(pos, na,nb), intBoard[PL(pos, na,nb)])) legals.push_back(PL(pos, na, nb) );
                     
                     break;
                 }
@@ -879,24 +879,24 @@ void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std
         
         for (auto e : legals)
         {
-            if (e.square) LegalMoves.push_back(e);
+            if (e != -1) LegalMoves.push_back(e);
         }
     }
     
     else if (type == KING) { // CASTLING NOT IMPLEMENTED
-        vector<Move> legals{};
+        vector<int> legals{};
         
         for (int i = 0; i <= 8; i++) {
             int& direction = i;
             int a = (direction <= 3) ? -1 : ( (direction <= 6) ? 1 : 0 ) ;
             int b = (direction == 1 || direction == 4 || direction == 8) ? -1 : ( (direction == 2 || direction == 5 || direction == 7) ? 1 : 0 ) ;
             
-            Move sqr = PL(pos, a, b);
+            int sqr = PL(pos, a, b);
             
-            if (!sqr.square) continue;
+            if (sqr == -1) continue;
             
-            if (sqr.square->HoldingPiece && !CanTake(pc, sqr.square->HoldingPiece)) continue;
-            if (CanTake(pc, sqr.square->HoldingPiece)) sqr.type = TAKE;
+            if (intBoard[sqr] != 0 && !CanTake(boardIndex, intBoard[boardIndex], sqr, intBoard[sqr])) continue;
+            //if (CanTake(boardIndex, intBoard[boardIndex], sqr, intBoard[sqr])) sqr.type = TAKE;
             
             legals.push_back(sqr);
             
@@ -945,7 +945,7 @@ void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std
         }*/
         
         for (auto e : legals) {
-            if (e.square) LegalMoves.push_back(e);
+            if (e != -1) LegalMoves.push_back(e);
         }
         
     }
