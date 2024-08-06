@@ -686,24 +686,19 @@ void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std
         int s2 = PL(pos, 1, (int)piececolor); // left (take)
         int s3 = PL(pos, -1, (int)piececolor); // right (take)
         
-        int s4{}; // double pawn forward
-        // Move* s5 = nullptr; // en pessant
-        
         if ( PL(pos, 0, (int)piececolor) == 0 && PL(pos, 0, (int) (piececolor*2)) == 0) {
     
                 if (piececolor == WHITE) {
-                    if (pos.numberCordinate == 2) {
-                                                                                                                                                
-                        s4 = PL(pos, 0, 2);
-                        LegalMoves.push_back( Move{s4, MOVE, DOUBLEFORWARD});
+                    if (pos >= 49 && pos <= 56) { // number cordinate == 2
+                        LegalMoves.push_back(PL(pos, 0, 2));
                         
                     }
                 }
                     
                 else {
-                    if (pos.numberCordinate == 7) {
-                        s4 = PL(pos, 0, -2);
-                        LegalMoves.push_back(   Move{s4,MOVE,DOUBLEFORWARD } );
+                    if (pos >= 9 && pos <= 16) { // number cordinate == 7
+
+                        LegalMoves.push_back(PL(pos, 0, -2));
 
                     }
                     

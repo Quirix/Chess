@@ -260,9 +260,9 @@ int main(){
         
         vb.putPiece(1, KING, WHITE);
         
-        for (auto e : vb.boardarray) {
+        /*for (auto e : vb.boardarray) {
             std::cout << e;
-        } std::cout << '\n';
+        } std::cout << '\n';*/
         
         //##debug###
         
