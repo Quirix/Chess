@@ -237,7 +237,6 @@ bool CanTake(Piece* attacker,Piece* piece2) { // WARNING: NOT CONSIDERING: PINS,
 }
 // bx=boardindex
 bool CanTake(int bx1, int inf1, int bx2, int inf2 ) { // WARNING: NOT CONSIDERING: PINS, IN CHECK, ...
-    std::cout << "color: " << (int) getColorInf(inf1) << ',' << getColorInf(inf2) << '\n';
     if (getColorInf(inf1) != getColorInf(inf2)) return true;
     return false;
 }
@@ -274,7 +273,7 @@ Square* CordinateToSquare(char a, int b) {
     return nullptr;
 }
 
-// up down
+// left right
 //* this functions finds in which column a board index on a int board is
 int findColumn(int x) {
     
@@ -285,7 +284,7 @@ int findColumn(int x) {
     return -1;
 }
 
-// left right
+// up down
 //* this functions finds in which row a board index on a int board is
 int findRow(int x) {
     
@@ -764,7 +763,7 @@ void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std
         if ( history->size() != 0) LatestNotate = &(history->at(history->size()-1) );
                                                     // last position
         
-        if (getColorInf( (LatestNotate->inf) != piececolor)   &&
+        if (getColorInf((LatestNotate->inf)) != piececolor   &&
             (LatestNotate->special == DOUBLEFORWARD) &&
 
 
@@ -773,7 +772,6 @@ void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std
             ( (PL(pos, 1, 0) == LatestNotate->To) ) ||
             ( (PL(pos, -1, 0) == LatestNotate->To) )
             )
-            
             )
         
         {
@@ -789,9 +787,9 @@ void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std
         // ----
           
         
-        if (intBoard[s1] == 0) LegalMoves.push_back(s1);
-        if (intBoard[s2] != 0 && CanTake(boardIndex, inf, s2, intBoard[s2]) ) LegalMoves.push_back(s2);
-        if ( intBoard[s3] != 0 && CanTake(boardIndex, inf, s3, intBoard[s3]) ) LegalMoves.push_back(s3);
+        if (intBoard[s1-1] == 0) LegalMoves.push_back(s1);
+        if (intBoard[s2-1] != 0 && CanTake(boardIndex, inf, s2, intBoard[s2-1]) ) LegalMoves.push_back(s2);
+        if ( intBoard[s3-1] != 0 && CanTake(boardIndex, inf, s3, intBoard[s3-1]) ) LegalMoves.push_back(s3);
         
                                        
     }
@@ -941,8 +939,6 @@ void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std
             if (sqr == -1) continue;
             
             if ( (intBoard[sqr-1] != 0) && (!CanTake(boardIndex, intBoard[boardIndex-1], sqr, intBoard[sqr-1])) ) continue;
-            
-            std::cout << sqr << ',' << intBoard[boardIndex-1] << ',' << ',' << intBoard[sqr-1] << '\n';
             
             legals.push_back(sqr);
             

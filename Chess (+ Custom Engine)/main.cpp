@@ -250,29 +250,25 @@ int main(){
         
         // Update
         
-        //##debug###
-        //for (auto* e : History) e->print(" ");
-        //cout << '\n';
-        //std::cout << (int) Checking << '\n';
-        //std::cout << PiecesVector.size() << '\n';
-        
+        //#####debug######
         VirtualBoard vb{};
         
-        vb.putPiece(1, KING, WHITE);
-        vb.putPiece(2, PAWN, WHITE);
+        int pos = 30;
+        
+        vb.putPiece(pos, KNIGHT, WHITE);
+        //vb.putPiece(8, PAWN, BLACK);
         
         for (auto e : vb.boardarray) {
             std::cout << e;
         } std::cout << '\n';
         std::vector<int> legalMoves{};
-        UpdateLegalMoves(legalMoves, 1, vb.boardarray[0], &vb.history ,vb.boardarray);
+        UpdateLegalMoves(legalMoves, pos, vb.boardarray[pos-1], &vb.history ,vb.boardarray);
         
         std::cout << "LEGALMOVES: ";
         for (auto e : legalMoves) {
             std::cout << e << ' ';
         } std::cout << '\n';
-        
-        //##debug###
+        //#####debug######
         
         for (auto* element : BoardVector) element->update();
         for (auto* element : PiecesVector) element->Update();
