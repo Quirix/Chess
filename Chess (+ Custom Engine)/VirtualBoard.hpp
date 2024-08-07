@@ -23,7 +23,7 @@ public:
     // NOTE: (int) PieceType == (board array white pieces int number) - 1
     
     std::array<int, 64> boardarray{};
-    std::array<LNotate, 50> history; // can only contain 50 moves.
+    std::array<LNotate, 50> history{}; // can only contain 50 moves.
     
     /* for boardarray:
      

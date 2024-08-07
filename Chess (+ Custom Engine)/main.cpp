@@ -260,9 +260,11 @@ int main(){
         
         vb.putPiece(1, KING, WHITE);
         
-        /*for (auto e : vb.boardarray) {
-            std::cout << e;
-        } std::cout << '\n';*/ 
+        //for (auto e : vb.boardarray) {
+        //    std::cout << e;
+        //} std::cout << '\n';
+        std::vector<int> legalMoves{};
+        UpdateLegalMoves(legalMoves, 1, vb.boardarray[1], &vb.history ,vb.boardarray);
         
         //##debug###
         

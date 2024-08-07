@@ -10,6 +10,7 @@
 #include "Piece.h"
 #include "Square.h"
 #include "Notate.hpp"
+#include "LNotate.hpp"
 
 using namespace std;
 using namespace sf;
@@ -59,7 +60,7 @@ void putPiecesInBoard();
 
 void UpdateLegalMoves(std::vector<Move>&, Piece*, std::vector<Notate*>*);
 
-void UpdateLegalMoves(std::vector<int>&, int, int, const std::array<int, 64>&);
+void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std::array<LNotate, 50>* history, const std::array<int, 64>& intBoard);
 
 PieceType getTypeInf(int);
 // Inf stands for int form

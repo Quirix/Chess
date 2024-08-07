@@ -9,7 +9,6 @@
 #include "Square.h"
 #include "FUNCTIONS.h"
 #include "Notate.hpp"
-#include "LNotate.hpp"
 
 #define makro window, BoardVector, PiecesVector, History
 
@@ -662,7 +661,7 @@ PieceType getTypeInf(int inf) {
         case 5: return QUEEN; break;
         case 6: return KING; break;
         default: {
-            std::cout << "error inf (int form) from function PieceType getTypeInf(int) is not 1-6 or -1 to -6.\n";
+            std::cout << "error inf (int form) from function PieceType getTypeInf(int) is not 1-6 or -1 to -6. (is abs(" << inf << ") or " << inf << '\n';
             return PAWN;
         }
     }
@@ -676,7 +675,7 @@ PieceColor getColorInf(int inf) {
 
 // intform stands is piece color and type in integer form
 // (comments how it works in VirtualBoard.hpp)
-void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std::vector<LNotate*>* history, const std::array<int, 64>& intBoard) {
+void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std::array<LNotate, 50>* history, const std::array<int, 64>& intBoard) {
 
     LegalMoves.clear(); // MAY MESSUP WITH BOARDFLIP
     
@@ -721,7 +720,7 @@ void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std
         LNotate* LatestNotate = nullptr; // works like a charm (no joke actually)
         
          
-        if ( history->size() != 0) LatestNotate = (history->at(history->size()-1) );
+        if ( history->size() != 0) LatestNotate = &(history->at(history->size()-1) );
                                                     // last position
         
         if (getColorInf( (LatestNotate->inf) != piececolor)   &&
