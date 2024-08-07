@@ -237,6 +237,7 @@ bool CanTake(Piece* attacker,Piece* piece2) { // WARNING: NOT CONSIDERING: PINS,
 }
 // bx=boardindex
 bool CanTake(int bx1, int inf1, int bx2, int inf2 ) { // WARNING: NOT CONSIDERING: PINS, IN CHECK, ...
+    std::cout << "color: " << (int) getColorInf(inf1) << ',' << getColorInf(inf2) << '\n';
     if (getColorInf(inf1) != getColorInf(inf2)) return true;
     return false;
 }
@@ -706,7 +707,7 @@ PieceType getTypeInf(int inf) {
 
 // returns piece color from int form
 PieceColor getColorInf(int inf) {
-    if (inf > 1) return WHITE;
+    if (inf >= 1) return WHITE;
     else return BLACK;
 }
 
@@ -718,6 +719,9 @@ void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std
     
     PieceColor piececolor = getColorInf(inf);
     PieceType type = getTypeInf(inf);
+    
+    std::cout << "piececolor" << (int) piececolor << '\n';
+    std::cout << "type" << (int) type << '\n';
     
     int& pos = boardIndex;
     
@@ -936,8 +940,9 @@ void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std
             
             if (sqr == -1) continue;
             
-            if (intBoard[sqr] != 0 && !CanTake(boardIndex, intBoard[boardIndex], sqr, intBoard[sqr])) continue;
-            //if (CanTake(boardIndex, intBoard[boardIndex], sqr, intBoard[sqr])) sqr.type = TAKE;
+            if ( (intBoard[sqr-1] != 0) && (!CanTake(boardIndex, intBoard[boardIndex-1], sqr, intBoard[sqr-1])) ) continue;
+            
+            std::cout << sqr << ',' << intBoard[boardIndex-1] << ',' << ',' << intBoard[sqr-1] << '\n';
             
             legals.push_back(sqr);
             

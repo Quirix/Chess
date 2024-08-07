@@ -259,12 +259,18 @@ int main(){
         VirtualBoard vb{};
         
         vb.putPiece(1, KING, WHITE);
+        vb.putPiece(2, PAWN, WHITE);
         
-        //for (auto e : vb.boardarray) {
-        //    std::cout << e;
-        //} std::cout << '\n';
-        //std::vector<int> legalMoves{};
-        //UpdateLegalMoves(legalMoves, 1, vb.boardarray[1], &vb.history ,vb.boardarray);
+        for (auto e : vb.boardarray) {
+            std::cout << e;
+        } std::cout << '\n';
+        std::vector<int> legalMoves{};
+        UpdateLegalMoves(legalMoves, 1, vb.boardarray[0], &vb.history ,vb.boardarray);
+        
+        std::cout << "LEGALMOVES: ";
+        for (auto e : legalMoves) {
+            std::cout << e << ' ';
+        } std::cout << '\n';
         
         //##debug###
         
