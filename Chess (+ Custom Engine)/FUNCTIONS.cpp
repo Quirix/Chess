@@ -796,7 +796,7 @@ void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std
     
     else if (type == KNIGHT) {
         
-        std::array<int, 8> legals = {
+        const std::array<int, 8> legals = {
             PL(pos, 1, 2),
             PL(pos, -1, 2),
             PL(pos, 2, 1),
@@ -811,9 +811,7 @@ void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std
             
             if (e == -1) continue; // if it goes outside of board.
             
-            if (intBoard[e] != 0 && !CanTake(boardIndex, intBoard[boardIndex], e, intBoard[e])) continue;
-            
-            //if (intBoard[e] && CanTake(boardIndex, intBoard[boardIndex], e, intBoard[e])) e.type = TAKE;
+            if (intBoard[e-1] != 0 && !CanTake(boardIndex, intBoard[boardIndex-1], e, intBoard[e-1])) continue;
             
             LegalMoves.push_back(e);
         }
@@ -833,10 +831,10 @@ void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std
                 int na = a * i;
                 int nb = b * i;
                 
-                if (!PL(pos, na, nb)) break;
-                if ( intBoard[PL(pos, na, nb)] != 0) {
+                if (PL(pos, na, nb) == -1) break;
+                if ( intBoard[PL(pos, na, nb)-1] != 0) {
                     
-                    if ( CanTake(boardIndex, intBoard[boardIndex], PL(pos, na,nb), intBoard[PL(pos, na,nb)])) {
+                    if ( CanTake(boardIndex, intBoard[boardIndex-1], PL(pos, na,nb), intBoard[PL(pos, na,nb)-1])) {
                         
                         legals.push_back(PL(pos, na, nb));
                     
@@ -872,9 +870,9 @@ void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std
                 int nb = b * i;
                 
                 if (PL(pos, na, nb) == -1) break;
-                if ( intBoard[PL(pos, na, nb)] != 0) {
+                if ( intBoard[PL(pos, na, nb)-1] != 0) {
                     
-                    if ( CanTake(boardIndex, intBoard[boardIndex], PL(pos, na,nb), intBoard[PL(pos, na,nb)])) legals.push_back( PL(pos, na, nb) );
+                    if ( CanTake(boardIndex, intBoard[boardIndex-1], PL(pos, na,nb), intBoard[PL(pos, na,nb)-1])) legals.push_back( PL(pos, na, nb) );
                     
                     break;
                 }
@@ -906,9 +904,9 @@ void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std
                 int nb = b * i;
                 
                 if (PL(pos, na, nb) == -1) break;
-                if ( intBoard[PL(pos, na, nb)] != 0) {
+                if ( intBoard[PL(pos, na, nb)-1] != 0) {
                     
-                    if ( CanTake(boardIndex, intBoard[boardIndex], PL(pos, na,nb), intBoard[PL(pos, na,nb)])) legals.push_back(PL(pos, na, nb) );
+                    if ( CanTake(boardIndex, intBoard[boardIndex-1], PL(pos, na,nb), intBoard[PL(pos, na,nb)-1])) legals.push_back(PL(pos, na, nb) );
                     
                     break;
                 }

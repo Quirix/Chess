@@ -253,10 +253,10 @@ int main(){
         //#####debug######
         VirtualBoard vb{};
         
-        int pos = 30;
+        int pos = 15;
         
-        vb.putPiece(pos, KNIGHT, WHITE);
-        //vb.putPiece(8, PAWN, BLACK);
+        vb.putPiece(pos, QUEEN, WHITE);
+        //vb.putPiece(12, PAWN, WHITE);
         
         for (auto e : vb.boardarray) {
             std::cout << e;
@@ -268,6 +268,15 @@ int main(){
         for (auto e : legalMoves) {
             std::cout << e << ' ';
         } std::cout << '\n';
+        
+        Square* sqr = CordinateToSquare( (char) (findColumn(pos) + 96), findRow(pos));
+        if (sqr && sqr->rec) sqr->rec->setFillColor(sf::Color::Black);
+        
+        for (auto e : legalMoves) {
+            Square* sqr2 = CordinateToSquare( (char) (findColumn(e) + 96), findRow(e));
+            if (sqr2 && sqr2->rec) sqr2->rec->setFillColor(sf::Color::Black);
+        }
+        
         //#####debug######
         
         for (auto* element : BoardVector) element->update();
