@@ -68,3 +68,6 @@ PieceType getTypeInf(int);
 PieceColor getColorInf(int);
 // Inf stands for int form
 
+int findColumn(int);
+int findRow(int);
+

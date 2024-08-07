@@ -273,14 +273,51 @@ Square* CordinateToSquare(char a, int b) {
     return nullptr;
 }
 
+// up down
+//* this functions finds in which column a board index on a int board is
+int findColumn(int x) {
+    
+    for (int i = 0 ; i < 8 ; i++){
+        if (x >= 1 && x <= 8) return x;
+        x -= 8;
+    }
+    return -1;
+}
+
+// left right
+//* this functions finds in which row a board index on a int board is
+int findRow(int x) {
+    
+    // WARNING: THIS ASSUMES x < 1 AND x > 64
+    
+    for (float i = -5;  i < 8; i++) {
+        if ( ((x / 8.f) > i) && ( (x / 8.f) <= (i+1))) return 8 - i;
+    }
+    
+    return -1;
+}
 
 Square* PL(BoardPositionNotation pos, int a, int b) {
     return CordinateToSquare( BoardPositionNotation( (char) (pos.characterCordinate+a), pos.numberCordinate+b));
 }
 
 int PL(int boardIndex, int a, int b) {
-    std::cout << a << '\n';
-    return 0;
+    // a = character. left right
+    // b = number. up down
+    
+    // check if it will go out of bounds (for a)
+    
+    // boardIndexPlusA
+    const int bipa = boardIndex+a;
+    if ( ((bipa) < 1) || (bipa) > 64) return -1;
+    if (findRow(boardIndex) != findRow(bipa)) return -1;
+    
+    boardIndex = bipa;
+     
+    const int bipb = boardIndex + (8*-b);
+    if ( ((bipb) < 1) || (bipb) > 64) return -1;
+    
+    return bipb;
 }
 
 //* makes changes to global variables such as boardvector and or uses them.
