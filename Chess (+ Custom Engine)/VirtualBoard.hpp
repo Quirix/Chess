@@ -40,6 +40,8 @@ public:
      
      */
     
+    VirtualBoard() = default;
+    
     void putPiece(int, PieceType, PieceColor);
     
     void pullPiece(int);

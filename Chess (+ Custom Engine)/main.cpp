@@ -256,7 +256,7 @@ int main(){
         //std::cout << (int) Checking << '\n';
         //std::cout << PiecesVector.size() << '\n';
         
-        VirtualBoard vb;
+        VirtualBoard vb{};
         
         vb.putPiece(1, KING, WHITE);
         

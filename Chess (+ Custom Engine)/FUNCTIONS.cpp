@@ -236,6 +236,11 @@ bool CanTake(Piece* attacker,Piece* piece2) { // WARNING: NOT CONSIDERING: PINS,
     if (attacker->piececolor != piece2->piececolor) return true;
     return false;
 }
+// bx=boardindex
+bool CanTake(int bx1, int inf1, int bx2, int inf2 ) { // WARNING: NOT CONSIDERING: PINS, IN CHECK, ...
+    if (getColorInf(inf1) != getColorInf(inf2)) return true;
+    return false;
+}
 
 //* makes changes to global variables such as boardvector and or uses them.
 Square* wcCordinateToSquare(BoardPositionNotation n) { // wc standing for with check
@@ -719,7 +724,7 @@ void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std
         if ( history->size() != 0) LatestNotate = (history->at(history->size()-1) );
                                                     // last position
         
-        if (getColorInf( (LatestNotate->inf) != piececolor) )  &&
+        if (getColorInf( (LatestNotate->inf) != piececolor)   &&
             (LatestNotate->special == DOUBLEFORWARD) &&
 
 
@@ -732,7 +737,7 @@ void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std
             )
         
         {
-            LegalMoves.push_back( Move{PL(LatestNotate->To->BoardPosition_notation, 0, piececolor), TAKE, PESSANT  } );
+            LegalMoves.push_back( PL(LatestNotate->To, 0, piececolor) ); // PESSANT
         }
         
         

@@ -30,6 +30,7 @@ public:
     int To; // on board index
     
     LNotate(AddNoT, int, int, int);
+    LNotate() = default;
     
     void print();
     std::array<int, 4> sprint();
