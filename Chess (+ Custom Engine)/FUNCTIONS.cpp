@@ -339,6 +339,44 @@ bool canTakeWhiteKingAll(){
     return false;
 }
 
+bool canTakeBlackKingAll(const std::array<int, 64>& intBoard, std::array<LNotate, 50>& history) {
+    for (int i = 0 ; i < 64; i++) {
+        const int& e = intBoard[i];
+        if (getColorInf(e) == WHITE) {
+            if (canTakeKingInf(intBoard, i+1, history)) return true;
+        }
+    }
+    
+    return false;
+}
+
+bool canTakeWhiteKingAll(const std::array<int, 64>& intBoard, std::array<LNotate, 50>& history) {
+    for (int i = 0 ; i < 64; i++) {
+        const int& e = intBoard[i];
+        if (getColorInf(e) == BLACK) {
+            if (canTakeKingInf(intBoard, i+1, history)) return true;
+        }
+    }
+    
+    return false;
+}
+
+bool canTakeKingInf(const std::array<int, 64>& intBoard, int index, std::array<LNotate, 50>& history) {
+    PieceColor clr = getColorInf(intBoard[index-1]);
+    std::vector<int> legalmoves;
+    UpdateLegalMoves(legalmoves, index, intBoard[index-1], &history, intBoard);
+    
+    for (auto e : legalmoves) {
+        if ( ( (clr == WHITE) && (intBoard[e-1] == -6) ) || ( (clr == BLACK) && (intBoard[e-1] == 6) ) )
+        {
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+
 //* makes changes to global variables such as boardvector and or uses them.
 void putPiecesInBoard()
 {
@@ -718,9 +756,6 @@ void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std
     
     PieceColor piececolor = getColorInf(inf);
     PieceType type = getTypeInf(inf);
-    
-    std::cout << "piececolor" << (int) piececolor << '\n';
-    std::cout << "type" << (int) type << '\n';
     
     int& pos = boardIndex;
     

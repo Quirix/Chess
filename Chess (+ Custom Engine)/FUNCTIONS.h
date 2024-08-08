@@ -52,9 +52,16 @@ int PL(int, int, int);
 bool canTakeBlackKingAll();
 bool canTakeWhiteKingAll();
 
-bool doPieceTypeAllContain(PieceColor, Square* sqr);
+// if any white piece can take the black king
+bool canTakeBlackKingAll(const std::array<int, 64>& intBoard, std::array<LNotate, 50>& history);
+// if any black piece can take the white king
+bool canTakeWhiteKingAll(const std::array<int, 64>& intBoard, std::array<LNotate, 50>& history);
+// both functions are function overloads for int form.
 
-bool canTakeWhiteKingAll();
+// can take (opposite color) king
+bool canTakeKingInf(const std::array<int, 64>& intBoard, int index, std::array<LNotate, 50>& history);
+
+bool doPieceTypeAllContain(PieceColor, Square* sqr);
 
 void putPiecesInBoard();
 
