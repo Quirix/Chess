@@ -23,3 +23,9 @@ std::array<int, 4> LNotate::sprint() {
 bool LNotate::operator==(const LNotate& cl) {
     return (special == cl.special) && (inf == cl.inf) && (From == cl.From) && (To == cl.To);
 }
+
+void LNotate::onCreate(int i)
+{
+    To = i;
+    From = i;
+}

@@ -71,3 +71,4 @@ PieceColor getColorInf(int);
 int findColumn(int);
 int findRow(int);
 
+int normalToInf(PieceType type, PieceColor clr);

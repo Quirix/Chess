@@ -993,3 +993,8 @@ void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std
     
     
 }
+
+int normalToInf(PieceType type, PieceColor color)
+{
+    return ((((int) type) + 1) * (int) color);
+}

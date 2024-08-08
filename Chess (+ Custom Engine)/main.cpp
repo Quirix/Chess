@@ -251,7 +251,7 @@ int main(){
         // Update
         
         //#####debug######
-        VirtualBoard vb{};
+        /*VirtualBoard vb{};
         
         int pos = 15;
         
@@ -262,20 +262,22 @@ int main(){
             std::cout << e;
         } std::cout << '\n';
         std::vector<int> legalMoves{};
-        UpdateLegalMoves(legalMoves, pos, vb.boardarray[pos-1], &vb.history ,vb.boardarray);
+        UpdateLegalMoves(legalMoves, pos, vb.boardarray[pos-1], &vb.history ,vb.boardarray);*/
         
-        std::cout << "LEGALMOVES: ";
-        for (auto e : legalMoves) {
-            std::cout << e << ' ';
+        VirtualBoard vb1;
+        
+        vb1.translateToVirtual(PiecesVector, History);
+        
+        for (auto e : vb1.boardarray) {
+            std::cout << e /* << ( ((e % 8) == 0) ? "\n" : "")*/;
         } std::cout << '\n';
         
-        Square* sqr = CordinateToSquare( (char) (findColumn(pos) + 96), findRow(pos));
-        if (sqr && sqr->rec) sqr->rec->setFillColor(sf::Color::Black);
-        
-        for (auto e : legalMoves) {
-            Square* sqr2 = CordinateToSquare( (char) (findColumn(e) + 96), findRow(e));
-            if (sqr2 && sqr2->rec) sqr2->rec->setFillColor(sf::Color::Black);
+        for (int i = 0; i < vb1.countHistory; i++) {
+            std::cout << i << ": From " << vb1.history[i].From << " To " << vb1.history[i].To
+            << " inf " << vb1.history[i].inf << " special " << vb1.history[i].special << '\n';
         }
+        
+        std::cout << "\n\n\n\n";
         
         //#####debug######
         

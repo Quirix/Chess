@@ -11,6 +11,9 @@
 
 #include "GLOBAL.h"
 #include "LNotate.hpp"
+#include "Piece.h"
+#include "Square.h"
+#include "Notate.hpp"
 
 /*
      * WARNING VirtualBoard is not intended for large history.
@@ -24,6 +27,8 @@ public:
     
     std::array<int, 64> boardarray{};
     std::array<LNotate, 50> history{}; // can only contain 50 moves.
+    
+    int countHistory = 0;
     
     /* for boardarray:
      
@@ -41,6 +46,10 @@ public:
      */
     
     VirtualBoard() = default;
+    
+    // Using the arguments, changes boardarray and history accordingly.
+    void translateToVirtual(const vector<Piece*>& PiecesVector,
+                            const vector<Notate*>& History);
     
     void putPiece(int, PieceType, PieceColor);
     

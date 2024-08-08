@@ -23,7 +23,7 @@ public:
      DOUBLEFORWARD = 3
      */
     
-    AddNoT special;
+    AddNoT special = CLASSIC;
     int inf; // int form
     
     int From; // on board index
@@ -34,6 +34,8 @@ public:
     
     void print();
     std::array<int, 4> sprint();
+    
+    void onCreate(int);
     
     bool operator==(const LNotate&);
 };
