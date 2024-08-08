@@ -21,9 +21,9 @@ void VirtualBoard::translateToVirtual(const vector<Piece*>& PiecesVector, const 
     }
     
     if (HistoryVector.size() > 20) {
-        for (int i = 0; i < 20; i++) {
+        for (int i = 1; i <= 20; i++) {
             Notate* n = (*(HistoryVector.end()-i));
-            if ( (n->NoT != CREATE) && (n->NoT != REMOVE)) {
+            if (n && (n->NoT != CREATE) && (n->NoT != REMOVE)) {
                 history[countHistory].To = n->To->BoardPosition_num;
                 history[countHistory].From = n->From->BoardPosition_num;
                 history[countHistory].special = n->ADD;

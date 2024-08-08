@@ -268,14 +268,7 @@ int main(){
         
         vb1.translateToVirtual(PiecesVector, History);
         
-        for (auto e : vb1.boardarray) {
-            std::cout << e /* << ( ((e % 8) == 0) ? "\n" : "")*/;
-        } std::cout << '\n';
         
-        for (int i = 0; i < vb1.countHistory; i++) {
-            std::cout << i << ": From " << vb1.history[i].From << " To " << vb1.history[i].To
-            << " inf " << vb1.history[i].inf << " special " << vb1.history[i].special << '\n';
-        }
         
         std::cout << "\n\n\n\n";
         
