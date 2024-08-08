@@ -4,6 +4,7 @@
 #include "Piece.h"
 #include <string>
 #include "GLOBAL.h"
+#include "LNotate.hpp"
 
 using namespace std;
 
@@ -26,6 +27,6 @@ public:
     
     void print(string e="\n");
     string sprint();
-    
-    
+    LNotate getLNotateVersion();
+    void changeLNotate(LNotate&);
 };

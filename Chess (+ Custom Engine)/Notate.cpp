@@ -8,6 +8,8 @@
 #include "Notate.hpp"
 #include <iostream>
 
+#include "FUNCTIONS.h"
+
 Notate::Notate(TypeNoT a, Square* b, Square* c, AddNoT d) :
 
     NoT{a} , From{b}, To{c}, ADD(d)
@@ -89,4 +91,15 @@ string Notate::sprint() {
     // ^^ when TypeNoT is create it gets position from this
     
     return r;
+}
+
+LNotate Notate::getLNotateVersion() {
+    return LNotate{ADD, normalToInf(piece->type, piece->piececolor), From->BoardPosition_num, To->BoardPosition_num};
+}
+
+void Notate::changeLNotate(LNotate& lnt) {
+    lnt.From = From->BoardPosition_num;
+    lnt.To = To->BoardPosition_num;
+    lnt.inf = normalToInf(piece->type, piece->piececolor);
+    lnt.special = ADD;
 }
