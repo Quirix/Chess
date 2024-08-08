@@ -27,4 +27,5 @@ public:
     void print(string e="\n");
     string sprint();
     
+    
 };

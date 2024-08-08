@@ -998,3 +998,19 @@ int normalToInf(PieceType type, PieceColor color)
 {
     return ((((int) type) + 1) * (int) color);
 }
+
+void moveInfPiece(std::array<int, 64>& intBoard, const LNotate& nt, std::array<LNotate, 50>& history, int& count) {
+    
+    if (intBoard[nt.From-1] == 0) {
+        std::cerr << "(FUNCTIONS.cpp) error in function moveInfPiece(..) LNotate& nt at intBoard[nt.from-1] == 0 or at the index in which is marked as having a piece doesn't have a piece.\n";
+        return;
+    }
+    
+    intBoard[nt.From-1] = 0;
+    intBoard[nt.To-1] = nt.inf;
+    history[count].From = nt.From;
+    history[count].To = nt.To;
+    history[count].inf = nt.inf;
+    history[count].special = nt.special;
+    count++;
+}

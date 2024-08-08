@@ -72,3 +72,5 @@ int findColumn(int);
 int findRow(int);
 
 int normalToInf(PieceType type, PieceColor clr);
+
+void moveInfPiece(std::array<int, 64>& intBoard, const LNotate& nt, std::array<LNotate, 50>& history, int& count);
