@@ -264,14 +264,14 @@ int main(){
         std::vector<int> legalMoves{};
         UpdateLegalMoves(legalMoves, pos, vb.boardarray[pos-1], &vb.history ,vb.boardarray);*/
         
-        //VirtualBoard vb1;
-        //vb1.putPiece(9, PAWN, WHITE);
-        //moveInfPiece(vb1.boardarray, LNotate{CLASSIC, 1, 9, 1}, vb1.history, vb1.countHistory);
+        VirtualBoard vb1;
+        vb1.putPiece(9, PAWN, WHITE);
+        moveInfPiece(vb1.boardarray, LNotate{CLASSIC, 1, 9, 1}, vb1.history, vb1.countHistory);
         //moveInfPiece(vb1.boardarray, LNotate{CLASSIC, 2, 15, 17}, vb1.history, vb1.countHistory);
         
-        /*for (auto e : vb1.history) {
+        for (auto e : vb1.history) {
             e.print();
-        } std::cout << "\n\n\n";*/
+        } std::cout << "\n\n\n";
         
         //vb1.translateToVirtual(PiecesVector, History);
         

@@ -24,10 +24,7 @@ void VirtualBoard::translateToVirtual(const vector<Piece*>& PiecesVector, const 
         for (int i = 1; i <= 20; i++) {
             Notate* n = (*(HistoryVector.end()-i));
             if (n && (n->NoT != CREATE) && (n->NoT != REMOVE)) {
-                history[countHistory].To = n->To->BoardPosition_num;
-                history[countHistory].From = n->From->BoardPosition_num;
-                history[countHistory].special = n->ADD;
-                history[countHistory].inf = normalToInf(n->piece->type, n->piece->piececolor);
+                n->changeLNotate(history[countHistory]);
                 countHistory++;
             }
         }
@@ -37,10 +34,7 @@ void VirtualBoard::translateToVirtual(const vector<Piece*>& PiecesVector, const 
     
     for (auto* e : HistoryVector) {
         if ( (e->NoT != CREATE) && (e->NoT != REMOVE)) {
-            history[countHistory].To = e->To->BoardPosition_num;
-            history[countHistory].From = e->From->BoardPosition_num;
-            history[countHistory].special = e->ADD;
-            history[countHistory].inf = normalToInf(e->piece->type, e->piece->piececolor);
+            e->changeLNotate(history[countHistory]);
             countHistory++;
         }
     }
