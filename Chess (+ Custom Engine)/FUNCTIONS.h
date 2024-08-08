@@ -61,7 +61,11 @@ bool canTakeWhiteKingAll(const std::array<int, 64>& intBoard, std::array<LNotate
 // can take (opposite color) king
 bool canTakeKingInf(const std::array<int, 64>& intBoard, int index, std::array<LNotate, 50>& history);
 
+// do any of the pieces with a (variable) piece color have sqr (variable) in them
 bool doPieceTypeAllContain(PieceColor, Square* sqr);
+
+// function overload for int form.
+bool doPieceTypeAllContain(PieceColor, int sqrindex, std::array<int, 64>& intBoard, std::array<LNotate, 50>& history);
 
 void putPiecesInBoard();
 

@@ -425,6 +425,23 @@ bool doPieceTypeAllContain(PieceColor piececolor, Square* sqr){
     return false;
 }
 
+bool doPieceTypeAllContain(PieceColor clr, int sqrindex, std::array<int, 64>& intBoard, std::array<LNotate, 50>& history) {
+    for (int i = 0 ; i < 64 ; i++) {
+        const int& e = intBoard[i];
+        if (getColorInf(e) == clr) {
+            std::vector<int> legalmoves;
+            UpdateLegalMoves(legalmoves, i+1, e, &history, intBoard);
+            
+            for (auto e : legalmoves) {
+                if (e == sqrindex) return true;
+            }
+            
+        }
+    }
+    
+    return false;
+}
+
 void UpdateLegalMoves(std::vector<Move>& LegalMoves, Piece* pc, std::vector<Notate*>* history) {
     
     BoardPositionNotation& pos = pc->OnSquare->BoardPosition_notation;
