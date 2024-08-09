@@ -695,28 +695,7 @@ void UpdateLegalMoves(std::vector<Move>& LegalMoves, Piece* pc, std::vector<Nota
             ;
         }
         
-        // remove moves that will result in check
-        
-        VirtualBoard vb;
-        
-        
-        for (const auto& e : legals) {
-        
-            
-        }
-        
         for (auto e : legals) {
-           
-            vb.translateToVirtual(*PiecesVector, *history);
-            
-            for (auto e1 : vb.boardarray) {
-                std::cout << e1;
-            } std::cout << '\n';
-            
-            moveInfPiece(vb.boardarray, LNotate{CLASSIC, normalToInf(type, piececolor), pc->OnSquare->BoardPosition_num, e.square->BoardPosition_num}, vb.history, vb.countHistory);
-            
-            if ( ((piececolor == WHITE) && canTakeWhiteKingAll(vb.boardarray, vb.history)) || ( (piececolor == BLACK) && canTakeBlackKingAll(vb.boardarray, vb.history) ))
-                continue;
             
             if (e.square) LegalMoves.push_back(e);
             std::cout << "legal\n";
@@ -724,7 +703,22 @@ void UpdateLegalMoves(std::vector<Move>& LegalMoves, Piece* pc, std::vector<Nota
         
     }
     
+    // remove moves that will result in check
     
+    VirtualBoard vb;
+    
+    for (auto it = LegalMoves.begin(); it != LegalMoves.end();) {
+        vb.translateToVirtual(*PiecesVector, *history);
+        
+        moveInfPiece(vb.boardarray, LNotate{CLASSIC, normalToInf(type, piececolor), pc->OnSquare->BoardPosition_num, (*it).square->BoardPosition_num}, vb.history, vb.countHistory);
+        
+        if ( ((piececolor == WHITE) && canTakeWhiteKingAll(vb.boardarray, vb.history)) || ( (piececolor == BLACK) && canTakeBlackKingAll(vb.boardarray, vb.history) ))
+        {
+            it = LegalMoves.erase(it);
+            continue;
+        }
+        it++;
+    }
     
 }
 
