@@ -690,11 +690,6 @@ void UpdateLegalMoves(std::vector<Move>& LegalMoves, Piece* pc, std::vector<Nota
             
         }
         
-        if (Serious && (Checking == (Check) piececolor) ) // if we are in check
-        {
-            ;
-        }
-        
         for (auto e : legals) {
             
             if (e.square) LegalMoves.push_back(e);

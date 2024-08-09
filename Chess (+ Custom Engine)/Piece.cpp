@@ -290,22 +290,18 @@ bool Piece::OnMouseRelease(bool isTurn = true) {
 void Piece::OnMousePress(bool isTurn = true) {
     
     if (isTurn) {
-        if ( (Checking == (Check) piececolor) && (type != KING) ) {}
-        // if we are in check, and we are not a king piece type
-        
-        else {
-            UpdateLegalMoves(LegalMoves, this, History);
+        UpdateLegalMoves(LegalMoves, this, History);
             
-            if (IsMouseInRec(rec)) {
-                rec->setOrigin(rec->getSize().x/2, rec->getSize().y/2);
-                IsBeingDragged = true;
+        if (IsMouseInRec(rec)) {
+            rec->setOrigin(rec->getSize().x/2, rec->getSize().y/2);
+            IsBeingDragged = true;
                 
-                OnSquare->rec->setFillColor(GetCorrectMoveColor(OnSquare->rec->getFillColor()));
-                if (OldSquare) OldSquare->rec->setFillColor(OldSquare->defaultColor);
+            OnSquare->rec->setFillColor(GetCorrectMoveColor(OnSquare->rec->getFillColor()));
+            if (OldSquare) OldSquare->rec->setFillColor(OldSquare->defaultColor);
                 
-                return;
-            }
+            return;
         }
+        
         
     }
     

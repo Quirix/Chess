@@ -284,7 +284,7 @@ int main(){
         for (auto* element : BoardVector) element->update();
         for (auto* element : PiecesVector) element->Update();
         
-        
+        std::cout << (int) Checking << '\n';
         
         window.clear();
         
