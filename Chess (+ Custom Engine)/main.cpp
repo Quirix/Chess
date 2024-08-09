@@ -264,7 +264,7 @@ int main(){
         std::vector<int> legalMoves{};
         UpdateLegalMoves(legalMoves, pos, vb.boardarray[pos-1], &vb.history ,vb.boardarray);*/
         
-        VirtualBoard vb1;
+        //VirtualBoard vb1;
         //vb1.putPiece(9, PAWN, WHITE);
         //moveInfPiece(vb1.boardarray, LNotate{CLASSIC, 1, 9, 1}, vb1.history, vb1.countHistory);
         //moveInfPiece(vb1.boardarray, LNotate{CLASSIC, 2, 15, 17}, vb1.history, vb1.countHistory);
@@ -273,7 +273,7 @@ int main(){
             e.print();
         } std::cout << "\n\n\n";*/
         
-        vb1.translateToVirtual(PiecesVector, History);
+        //vb1.translateToVirtual(PiecesVector, History);
         //std::cout << "\n\n\nCANTAKE: " << canTakeBlackKingAll(vb1.boardarray, vb1.history)
         // << ' ' << canTakeWhiteKingAll(vb1.boardarray, vb1.history) << '\n';
         

@@ -13,6 +13,21 @@
 
 void VirtualBoard::translateToVirtual(const vector<Piece*>& PiecesVector, const vector<Notate*>& HistoryVector)
 {
+    
+    for (auto& e : history)
+    {
+        e.onCreate(0);
+        e.From=0;
+        e.To=0;
+        e.inf=0;
+        e.special=CLASSIC;
+    }
+    
+    for (auto& e : boardarray)
+    {
+        e = 0;
+    }
+    
     for (auto* e : PiecesVector) {
         if (e && e->OnSquare) {
             

@@ -9,6 +9,7 @@
 #include "Square.h"
 #include "FUNCTIONS.h"
 #include "Notate.hpp"
+#include "VirtualBoard.hpp"
 
 #define makro window, BoardVector, PiecesVector, History
 
@@ -428,7 +429,7 @@ bool doPieceTypeAllContain(PieceColor piececolor, Square* sqr){
 bool doPieceTypeAllContain(PieceColor clr, int sqrindex, std::array<int, 64>& intBoard, std::array<LNotate, 50>& history) {
     for (int i = 0 ; i < 64 ; i++) {
         const int& e = intBoard[i];
-        if (getColorInf(e) == clr) {
+        if ( (e != 0) && (getColorInf(e) == clr) ) {
             std::vector<int> legalmoves;
             UpdateLegalMoves(legalmoves, i+1, e, &history, intBoard);
             
@@ -696,44 +697,30 @@ void UpdateLegalMoves(std::vector<Move>& LegalMoves, Piece* pc, std::vector<Nota
         
         // remove moves that will result in check
         
-        //* bugged 100 out of 100 percent
+        VirtualBoard vb;
         
-        /*for(int i = 0; i < legals.size(); i++)
-        {
-            std::cout << piececolor << ' ' << i << '\n';
-            Move& e = legals[i];
+        
+        for (const auto& e : legals) {
+        
             
-            bool canttk = false;
-            
-            //if (piececolor == WHITE) canttk = doPieceTypeAllContain(BLACK, e.square);
-            //else canttk = doPieceTypeAllContain(WHITE, e.square);
-            //std::cout << "canttk = " << canttk << '\n';
-             
-             
-            
-            
-            //FUTURE method doesn't work.
-            
-            MoveTo(e, true);
-            
-            if (piececolor == WHITE)
-                canttk = canTakeWhiteKingAll();
-            if (piececolor == BLACK)
-                canttk = canTakeBlackKingAll();
-            
-            Move moveback = Move{OldSquare};
-            MoveTo(moveback, true);
-            
-            if (canttk == true) {
-                auto it = (legals.begin()+i);
-                legals.erase(it);
-            }
-            
-        }*/
+        }
         
         for (auto e : legals) {
+           
+            vb.translateToVirtual(*PiecesVector, *history);
+            
+            for (auto e1 : vb.boardarray) {
+                std::cout << e1;
+            } std::cout << '\n';
+            
+            moveInfPiece(vb.boardarray, LNotate{CLASSIC, normalToInf(type, piececolor), pc->OnSquare->BoardPosition_num, e.square->BoardPosition_num}, vb.history, vb.countHistory);
+            
+            if ( ((piececolor == WHITE) && canTakeWhiteKingAll(vb.boardarray, vb.history)) || ( (piececolor == BLACK) && canTakeBlackKingAll(vb.boardarray, vb.history) ))
+                continue;
+            
             if (e.square) LegalMoves.push_back(e);
-        }
+            std::cout << "legal\n";
+        } std::cout << "\n\n\n";
         
     }
     
@@ -769,6 +756,8 @@ PieceColor getColorInf(int inf) {
 // (comments how it works in VirtualBoard.hpp)
 void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std::array<LNotate, 50>* history, const std::array<int, 64>& intBoard) {
 
+    if (inf == 0) return;
+    
     LegalMoves.clear(); // MAY MESSUP WITH BOARDFLIP
     
     PieceColor piececolor = getColorInf(inf);
