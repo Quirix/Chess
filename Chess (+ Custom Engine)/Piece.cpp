@@ -123,7 +123,7 @@ Piece::Piece(PieceType arg_piecetype, PieceColor arg_piececolor, Square* arg_ons
  
  */
 
-void Piece::MoveTo(Move& var_square, bool future) {
+void Piece::MoveTo(Move& var_square) {
     
     
     
@@ -161,17 +161,13 @@ void Piece::MoveTo(Move& var_square, bool future) {
     // do what i did with tictactoe
     // *****
     
-    if (!future) rec->setPosition( recpos.x/* + (recsize.x - rec->getSize().x) /2*/ , recpos.y + 5);
+    rec->setPosition( recpos.x/* + (recsize.x - rec->getSize().x) /2*/ , recpos.y + 5);
     OnSquare = var_square.square;
     var_square.square->UpdateHoldingPiece(this);
     
     if (OldSquare && OnSquare && OldSquare == OnSquare) OldSquare = nullptr;
     
-    /*else*/ if (!future) UpdateLegalMoves(LegalMoves, this, History);
-    
-    if (!future && CanTakeOppositeKing() && Serious) {
-        Checking = (Check) -piececolor;
-    }
+    /*else*/ UpdateLegalMoves(LegalMoves, this, History);
     
     TypeNoT tn = (!took) ? MOVE : TAKE; // what the hell was i thinking here.
     

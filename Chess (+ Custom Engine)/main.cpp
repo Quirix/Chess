@@ -284,6 +284,10 @@ int main(){
         for (auto* element : BoardVector) element->update();
         for (auto* element : PiecesVector) element->Update();
         
+        if (canTakeWhiteKingAll()) Checking = BLACKTOWHITE;
+        else if (canTakeBlackKingAll()) Checking = WHITETOBLACK;
+        else Checking = NOCHECK;
+        
         std::cout << (int) Checking << '\n';
         
         window.clear();
