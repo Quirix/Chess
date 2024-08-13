@@ -1029,6 +1029,34 @@ int normalToInf(PieceType type, PieceColor color)
     return ((((int) type) + 1) * (int) color);
 }
 
+// use when a piece moved
+void updateCastleStateInf(int inf, int From, std::array<int, 2>& castleSt) {
+    if ( (getColorInf(inf) == WHITE) && (castleSt[0] != -1) ) {
+        if (inf == 6) castleSt[0] = -1;
+        if (inf == 4)
+        {
+            // 57 = queenside == 0
+            if ( (From == 57) && castleSt[0] == 1) castleSt[0] = -1;
+            if ( (From == 57) && castleSt[0] == 2) castleSt[0] = 0;
+            
+            if ( (From == 64) && castleSt[0] == 0) castleSt[0] = -1;
+            if ( (From == 64) && castleSt[0] == 2) castleSt[0] = 1;
+        }
+    }
+    
+    else {
+        if (inf == -6) castleSt[1] = -1;
+        if (inf == -4)
+        {
+            if ( (From == 1) && castleSt[1] == 1) castleSt[0] = -1;
+            if ( (From == 1) && castleSt[1] == 2) castleSt[0] = 0;
+            
+            if ( (From == 8) && castleSt[1] == 0) castleSt[0] = -1;
+            if ( (From == 8) && castleSt[1] == 2) castleSt[0] = 1;
+        }
+    }
+}
+
 void moveInfPiece(std::array<int, 64>& intBoard, const LNotate& nt, std::array<LNotate, 50>& history, int& count, std::array<int, 2>& castleSt) {
     
     if (intBoard[nt.From-1] == 0) {
@@ -1048,29 +1076,6 @@ void moveInfPiece(std::array<int, 64>& intBoard, const LNotate& nt, std::array<L
     history[count].special = nt.special;
     count++;
     
-    if ( (getColorInf(nt.inf) == WHITE) && (castleSt[0] != -1) ) {
-        if (nt.inf == 6) castleSt[0] = -1;
-        if (nt.inf == 4)
-        {
-            // 57 = queenside == 0
-            if ( (nt.From == 57) && castleSt[0] == 1) castleSt[0] = -1;
-            if ( (nt.From == 57) && castleSt[0] == 2) castleSt[0] = 0;
-            
-            if ( (nt.From == 64) && castleSt[0] == 0) castleSt[0] = -1;
-            if ( (nt.From == 64) && castleSt[0] == 2) castleSt[0] = 1;
-        }
-    }
     
-    else {
-        if (nt.inf == -6) castleSt[1] = -1;
-        if (nt.inf == -4)
-        {
-            if ( (nt.From == 1) && castleSt[1] == 1) castleSt[0] = -1;
-            if ( (nt.From == 1) && castleSt[1] == 2) castleSt[0] = 0;
-            
-            if ( (nt.From == 8) && castleSt[1] == 0) castleSt[0] = -1;
-            if ( (nt.From == 8) && castleSt[1] == 2) castleSt[0] = 1;
-        }
-    }
         
 }

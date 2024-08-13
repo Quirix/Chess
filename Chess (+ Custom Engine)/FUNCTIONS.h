@@ -84,4 +84,6 @@ int findRow(int);
 
 int normalToInf(PieceType type, PieceColor clr);
 
+void updateCastleStateInf(int inf, int from, std::array<int, 2>& castleSt);
+
 void moveInfPiece(std::array<int, 64>& intBoard, const LNotate& nt, std::array<LNotate, 50>& history, int& count, std::array<int, 2>& castleSt);
