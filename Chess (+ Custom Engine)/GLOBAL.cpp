@@ -17,4 +17,6 @@ bool TakeTurns = true;
 bool CanCreate = false;
 bool Serious = true; // non-debug
 
+int castleState = 2;
+
 Check Checking = NOCHECK;

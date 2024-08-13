@@ -13,6 +13,18 @@ enum Check {
  extern float squareWidth;
  extern float squareHeight;
 
+extern int castleState;
+
+/* ^^^ castleState doc
+ (only if space is given and square is not attacked and +)
+ (so not to track the whole history. Changes when king moves or rook)
+ 2: king able to castle both ways
+ 1: king able to castle kingside
+ 0: king able to castle queenside
+ -1: king is not able to castle
+*/
+
+
 extern bool DissallowLegalMoves;
 extern bool TakeTurns;
 extern bool CanCreate;
