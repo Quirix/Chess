@@ -340,32 +340,32 @@ bool canTakeWhiteKingAll(){
     return false;
 }
 
-bool canTakeBlackKingAll(const std::array<int, 64>& intBoard, std::array<LNotate, 50>& history) {
+bool canTakeBlackKingAll(const std::array<int, 64>& intBoard, std::array<LNotate, 50>& history, int castleSt) {
     for (int i = 0 ; i < 64; i++) {
         const int& e = intBoard[i];
         if (getColorInf(e) == WHITE) {
-            if (canTakeKingInf(intBoard, i+1, history)) return true;
+            if (canTakeKingInf(intBoard, i+1, history, castleSt)) return true;
         }
     }
     
     return false;
 }
 
-bool canTakeWhiteKingAll(const std::array<int, 64>& intBoard, std::array<LNotate, 50>& history) {
+bool canTakeWhiteKingAll(const std::array<int, 64>& intBoard, std::array<LNotate, 50>& history, int castleSt) {
     for (int i = 0 ; i < 64; i++) {
         const int& e = intBoard[i];
         if (getColorInf(e) == BLACK) {
-            if (canTakeKingInf(intBoard, i+1, history)) return true;
+            if (canTakeKingInf(intBoard, i+1, history, castleSt)) return true;
         }
     }
     
     return false;
 }
 
-bool canTakeKingInf(const std::array<int, 64>& intBoard, int index, std::array<LNotate, 50>& history) {
+bool canTakeKingInf(const std::array<int, 64>& intBoard, int index, std::array<LNotate, 50>& history, int castleSt) {
     PieceColor clr = getColorInf(intBoard[index-1]);
     std::vector<int> legalmoves;
-    UpdateLegalMoves(legalmoves, index, intBoard[index-1], &history, intBoard);
+    UpdateLegalMoves(legalmoves, index, intBoard[index-1], &history, intBoard, castleSt);
     
     for (auto e : legalmoves) {
         if ( ( (clr == WHITE) && (intBoard[e-1] == -6) ) || ( (clr == BLACK) && (intBoard[e-1] == 6) ) )
@@ -426,12 +426,12 @@ bool doPieceTypeAllContain(PieceColor piececolor, Square* sqr){
     return false;
 }
 
-bool doPieceTypeAllContain(PieceColor clr, int sqrindex, std::array<int, 64>& intBoard, std::array<LNotate, 50>& history) {
+bool doPieceTypeAllContain(PieceColor clr, int sqrindex, std::array<int, 64>& intBoard, std::array<LNotate, 50>& history, int castleSt) {
     for (int i = 0 ; i < 64 ; i++) {
         const int& e = intBoard[i];
         if ( (e != 0) && (getColorInf(e) == clr) ) {
             std::vector<int> legalmoves;
-            UpdateLegalMoves(legalmoves, i+1, e, &history, intBoard);
+            UpdateLegalMoves(legalmoves, i+1, e, &history, intBoard, castleSt);
             
             for (auto e : legalmoves) {
                 if (e == sqrindex) return true;
@@ -443,7 +443,7 @@ bool doPieceTypeAllContain(PieceColor clr, int sqrindex, std::array<int, 64>& in
     return false;
 }
 
-void UpdateLegalMoves(std::vector<Move>& LegalMoves, Piece* pc, std::vector<Notate*>* history) {
+void UpdateLegalMoves(std::vector<Move>& LegalMoves, Piece* pc, std::vector<Notate*>* history, int castleSt) {
     
     BoardPositionNotation& pos = pc->OnSquare->BoardPosition_notation;
 
@@ -703,11 +703,11 @@ void UpdateLegalMoves(std::vector<Move>& LegalMoves, Piece* pc, std::vector<Nota
     VirtualBoard vb;
     
     for (auto it = LegalMoves.begin(); it != LegalMoves.end();) {
-        vb.translateToVirtual(*PiecesVector, *history);
+        vb.translateToVirtual(*PiecesVector, *history, castleSt);
         
         moveInfPiece(vb.boardarray, LNotate{CLASSIC, normalToInf(type, piececolor), pc->OnSquare->BoardPosition_num, (*it).square->BoardPosition_num}, vb.history, vb.countHistory);
         
-        if ( ((piececolor == WHITE) && canTakeWhiteKingAll(vb.boardarray, vb.history)) || ( (piececolor == BLACK) && canTakeBlackKingAll(vb.boardarray, vb.history) ))
+        if ( ((piececolor == WHITE) && canTakeWhiteKingAll(vb.boardarray, vb.history, vb.castleSt)) || ( (piececolor == BLACK) && canTakeBlackKingAll(vb.boardarray, vb.history, vb.castleSt) ))
         {
             it = LegalMoves.erase(it);
             continue;
@@ -743,7 +743,7 @@ PieceColor getColorInf(int inf) {
 
 // intform stands is piece color and type in integer form
 // (comments how it works in VirtualBoard.hpp)
-void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std::array<LNotate, 50>* history, const std::array<int, 64>& intBoard) {
+void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std::array<LNotate, 50>* history, const std::array<int, 64>& intBoard, int castleSt) {
 
     if (inf == 0) return;
     

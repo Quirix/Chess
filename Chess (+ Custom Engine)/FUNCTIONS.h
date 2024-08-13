@@ -53,25 +53,25 @@ bool canTakeBlackKingAll();
 bool canTakeWhiteKingAll();
 
 // if any white piece can take the black king
-bool canTakeBlackKingAll(const std::array<int, 64>& intBoard, std::array<LNotate, 50>& history);
+bool canTakeBlackKingAll(const std::array<int, 64>& intBoard, std::array<LNotate, 50>& history, int);
 // if any black piece can take the white king
-bool canTakeWhiteKingAll(const std::array<int, 64>& intBoard, std::array<LNotate, 50>& history);
+bool canTakeWhiteKingAll(const std::array<int, 64>& intBoard, std::array<LNotate, 50>& history, int);
 // both functions are function overloads for int form.
 
 // can take (opposite color) king
-bool canTakeKingInf(const std::array<int, 64>& intBoard, int index, std::array<LNotate, 50>& history);
+bool canTakeKingInf(const std::array<int, 64>& intBoard, int index, std::array<LNotate, 50>& history, int);
 
 // do any of the pieces with a (variable) piece color have sqr (variable) in them
 bool doPieceTypeAllContain(PieceColor, Square* sqr);
 
 // function overload for int form.
-bool doPieceTypeAllContain(PieceColor, int sqrindex, std::array<int, 64>& intBoard, std::array<LNotate, 50>& history);
+bool doPieceTypeAllContain(PieceColor, int sqrindex, std::array<int, 64>& intBoard, std::array<LNotate, 50>& history, int);
 
 void putPiecesInBoard();
 
-void UpdateLegalMoves(std::vector<Move>&, Piece*, std::vector<Notate*>*);
+void UpdateLegalMoves(std::vector<Move>&, Piece*, std::vector<Notate*>*, int=castleState);
 
-void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std::array<LNotate, 50>* history, const std::array<int, 64>& intBoard);
+void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std::array<LNotate, 50>* history, const std::array<int, 64>& intBoard, int);
 
 PieceType getTypeInf(int);
 // Inf stands for int form

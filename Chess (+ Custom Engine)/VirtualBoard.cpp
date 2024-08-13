@@ -11,8 +11,10 @@
 
 #include "FUNCTIONS.h"
 
-void VirtualBoard::translateToVirtual(const vector<Piece*>& PiecesVector, const vector<Notate*>& HistoryVector)
+void VirtualBoard::translateToVirtual(const vector<Piece*>& PiecesVector, const vector<Notate*>& HistoryVector, int cslst)
 {
+    
+    castleSt = cslst;
     
     for (auto& e : history)
     {

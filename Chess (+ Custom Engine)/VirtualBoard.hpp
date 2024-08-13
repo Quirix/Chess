@@ -30,6 +30,8 @@ public:
     
     int countHistory = 0;
     
+    int castleSt = 2; // castle state
+    
     /* for boardarray:
      
      1 = white pawn
@@ -49,7 +51,7 @@ public:
     
     // Using the arguments, changes boardarray and history accordingly.
     void translateToVirtual(const vector<Piece*>& PiecesVector,
-                            const vector<Notate*>& History);
+                            const vector<Notate*>& History, int);
     
     void putPiece(int, PieceType, PieceColor);
     
