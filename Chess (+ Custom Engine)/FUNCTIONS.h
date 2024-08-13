@@ -53,25 +53,25 @@ bool canTakeBlackKingAll();
 bool canTakeWhiteKingAll();
 
 // if any white piece can take the black king
-bool canTakeBlackKingAll(const std::array<int, 64>& intBoard, std::array<LNotate, 50>& history, int);
+bool canTakeBlackKingAll(const std::array<int, 64>& intBoard, std::array<LNotate, 50>& history, std::array<int, 2>&);
 // if any black piece can take the white king
-bool canTakeWhiteKingAll(const std::array<int, 64>& intBoard, std::array<LNotate, 50>& history, int);
+bool canTakeWhiteKingAll(const std::array<int, 64>& intBoard, std::array<LNotate, 50>& history, std::array<int, 2>&);
 // both functions are function overloads for int form.
 
 // can take (opposite color) king
-bool canTakeKingInf(const std::array<int, 64>& intBoard, int index, std::array<LNotate, 50>& history, int);
+bool canTakeKingInf(const std::array<int, 64>& intBoard, int index, std::array<LNotate, 50>& history, std::array<int, 2>&);
 
 // do any of the pieces with a (variable) piece color have sqr (variable) in them
 bool doPieceTypeAllContain(PieceColor, Square* sqr);
 
 // function overload for int form.
-bool doPieceTypeAllContain(PieceColor, int sqrindex, std::array<int, 64>& intBoard, std::array<LNotate, 50>& history, int);
+bool doPieceTypeAllContain(PieceColor, int sqrindex, std::array<int, 64>& intBoard, std::array<LNotate, 50>& history, std::array<int, 2>&);
 
 void putPiecesInBoard();
 
-void UpdateLegalMoves(std::vector<Move>&, Piece*, std::vector<Notate*>*, int=castleState);
+void UpdateLegalMoves(std::vector<Move>&, Piece*, std::vector<Notate*>*, std::array<int, 2>& cstl=castleState);
 
-void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std::array<LNotate, 50>* history, const std::array<int, 64>& intBoard, int);
+void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std::array<LNotate, 50>* history, const std::array<int, 64>& intBoard, std::array<int, 2>&);
 
 PieceType getTypeInf(int);
 // Inf stands for int form
@@ -84,4 +84,4 @@ int findRow(int);
 
 int normalToInf(PieceType type, PieceColor clr);
 
-void moveInfPiece(std::array<int, 64>& intBoard, const LNotate& nt, std::array<LNotate, 50>& history, int& count);
+void moveInfPiece(std::array<int, 64>& intBoard, const LNotate& nt, std::array<LNotate, 50>& history, int& count, std::array<int, 2>& castleSt);

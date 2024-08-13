@@ -1,5 +1,7 @@
 #pragma once
 
+#include <array>
+
 enum Check {
     NOCHECK = 0,
     BLACKTOWHITE = 1,
@@ -13,7 +15,7 @@ enum Check {
  extern float squareWidth;
  extern float squareHeight;
 
-extern int castleState;
+extern std::array<int, 2> castleState;
 
 /* ^^^ castleState doc
  (only if space is given and square is not attacked and +)
@@ -22,6 +24,9 @@ extern int castleState;
  1: king able to castle kingside
  0: king able to castle queenside
  -1: king is not able to castle
+ 
+ [0] = white
+ [1] = black
 */
 
 

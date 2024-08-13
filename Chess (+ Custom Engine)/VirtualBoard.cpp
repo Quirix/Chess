@@ -11,7 +11,7 @@
 
 #include "FUNCTIONS.h"
 
-void VirtualBoard::translateToVirtual(const vector<Piece*>& PiecesVector, const vector<Notate*>& HistoryVector, int cslst)
+void VirtualBoard::translateToVirtual(const vector<Piece*>& PiecesVector, const vector<Notate*>& HistoryVector, const std::array<int, 2>& cslst)
 {
     
     castleSt = cslst;

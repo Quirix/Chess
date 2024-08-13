@@ -340,7 +340,7 @@ bool canTakeWhiteKingAll(){
     return false;
 }
 
-bool canTakeBlackKingAll(const std::array<int, 64>& intBoard, std::array<LNotate, 50>& history, int castleSt) {
+bool canTakeBlackKingAll(const std::array<int, 64>& intBoard, std::array<LNotate, 50>& history, std::array<int, 2>& castleSt) {
     for (int i = 0 ; i < 64; i++) {
         const int& e = intBoard[i];
         if (getColorInf(e) == WHITE) {
@@ -351,7 +351,7 @@ bool canTakeBlackKingAll(const std::array<int, 64>& intBoard, std::array<LNotate
     return false;
 }
 
-bool canTakeWhiteKingAll(const std::array<int, 64>& intBoard, std::array<LNotate, 50>& history, int castleSt) {
+bool canTakeWhiteKingAll(const std::array<int, 64>& intBoard, std::array<LNotate, 50>& history, std::array<int, 2>& castleSt) {
     for (int i = 0 ; i < 64; i++) {
         const int& e = intBoard[i];
         if (getColorInf(e) == BLACK) {
@@ -362,7 +362,7 @@ bool canTakeWhiteKingAll(const std::array<int, 64>& intBoard, std::array<LNotate
     return false;
 }
 
-bool canTakeKingInf(const std::array<int, 64>& intBoard, int index, std::array<LNotate, 50>& history, int castleSt) {
+bool canTakeKingInf(const std::array<int, 64>& intBoard, int index, std::array<LNotate, 50>& history, std::array<int, 2>& castleSt) {
     PieceColor clr = getColorInf(intBoard[index-1]);
     std::vector<int> legalmoves;
     UpdateLegalMoves(legalmoves, index, intBoard[index-1], &history, intBoard, castleSt);
@@ -426,7 +426,7 @@ bool doPieceTypeAllContain(PieceColor piececolor, Square* sqr){
     return false;
 }
 
-bool doPieceTypeAllContain(PieceColor clr, int sqrindex, std::array<int, 64>& intBoard, std::array<LNotate, 50>& history, int castleSt) {
+bool doPieceTypeAllContain(PieceColor clr, int sqrindex, std::array<int, 64>& intBoard, std::array<LNotate, 50>& history, std::array<int, 2>& castleSt) {
     for (int i = 0 ; i < 64 ; i++) {
         const int& e = intBoard[i];
         if ( (e != 0) && (getColorInf(e) == clr) ) {
@@ -443,7 +443,7 @@ bool doPieceTypeAllContain(PieceColor clr, int sqrindex, std::array<int, 64>& in
     return false;
 }
 
-void UpdateLegalMoves(std::vector<Move>& LegalMoves, Piece* pc, std::vector<Notate*>* history, int castleSt) {
+void UpdateLegalMoves(std::vector<Move>& LegalMoves, Piece* pc, std::vector<Notate*>* history, std::array<int, 2>& castleSt) {
     
     BoardPositionNotation& pos = pc->OnSquare->BoardPosition_notation;
 
@@ -705,7 +705,7 @@ void UpdateLegalMoves(std::vector<Move>& LegalMoves, Piece* pc, std::vector<Nota
     for (auto it = LegalMoves.begin(); it != LegalMoves.end();) {
         vb.translateToVirtual(*PiecesVector, *history, castleSt);
         
-        moveInfPiece(vb.boardarray, LNotate{CLASSIC, normalToInf(type, piececolor), pc->OnSquare->BoardPosition_num, (*it).square->BoardPosition_num}, vb.history, vb.countHistory);
+        moveInfPiece(vb.boardarray, LNotate{CLASSIC, normalToInf(type, piececolor), pc->OnSquare->BoardPosition_num, (*it).square->BoardPosition_num}, vb.history, vb.countHistory, castleSt);
         
         if ( ((piececolor == WHITE) && canTakeWhiteKingAll(vb.boardarray, vb.history, vb.castleSt)) || ( (piececolor == BLACK) && canTakeBlackKingAll(vb.boardarray, vb.history, vb.castleSt) ))
         {
@@ -743,7 +743,7 @@ PieceColor getColorInf(int inf) {
 
 // intform stands is piece color and type in integer form
 // (comments how it works in VirtualBoard.hpp)
-void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std::array<LNotate, 50>* history, const std::array<int, 64>& intBoard, int castleSt) {
+void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std::array<LNotate, 50>* history, const std::array<int, 64>& intBoard, std::array<int, 2>& castleSt) {
 
     if (inf == 0) return;
     
@@ -1029,11 +1029,15 @@ int normalToInf(PieceType type, PieceColor color)
     return ((((int) type) + 1) * (int) color);
 }
 
-void moveInfPiece(std::array<int, 64>& intBoard, const LNotate& nt, std::array<LNotate, 50>& history, int& count) {
+void moveInfPiece(std::array<int, 64>& intBoard, const LNotate& nt, std::array<LNotate, 50>& history, int& count, std::array<int, 2>& castleSt) {
     
     if (intBoard[nt.From-1] == 0) {
-        std::cerr << "(FUNCTIONS.cpp) error in function moveInfPiece(..) LNotate& nt at intBoard[nt.from-1] == 0 or at the index in which is marked as having a piece doesn't have a piece.\n";
+        std::cerr << "(FUNCTIONS.cpp) [ERROR] in function moveInfPiece(..) LNotate& nt at intBoard[nt.from-1] == 0 or at the index in which is marked as having a piece doesn't have a piece.\n";
         return;
+    }
+    
+    if (intBoard[nt.To-1] != 0) {
+        std::cerr << "(FUNCTIONS.cpp) [WARNING} in function moveInfPiece(..) LNotate& nt at intBoard[nt.To-1] != 0 or a piece exists where this inf piece wants to move to.\nContinuing code.\n";
     }
     
     intBoard[nt.From-1] = 0;
@@ -1043,4 +1047,30 @@ void moveInfPiece(std::array<int, 64>& intBoard, const LNotate& nt, std::array<L
     history[count].inf = nt.inf;
     history[count].special = nt.special;
     count++;
+    
+    if ( (getColorInf(nt.inf) == WHITE) && (castleSt[0] != -1) ) {
+        if (nt.inf == 6) castleSt[0] = -1;
+        if (nt.inf == 4)
+        {
+            // 57 = queenside == 0
+            if ( (nt.From == 57) && castleSt[0] == 1) castleSt[0] = -1;
+            if ( (nt.From == 57) && castleSt[0] == 2) castleSt[0] = 0;
+            
+            if ( (nt.From == 64) && castleSt[0] == 0) castleSt[0] = -1;
+            if ( (nt.From == 64) && castleSt[0] == 2) castleSt[0] = 1;
+        }
+    }
+    
+    else {
+        if (nt.inf == -6) castleSt[1] = -1;
+        if (nt.inf == -4)
+        {
+            if ( (nt.From == 1) && castleSt[1] == 1) castleSt[0] = -1;
+            if ( (nt.From == 1) && castleSt[1] == 2) castleSt[0] = 0;
+            
+            if ( (nt.From == 8) && castleSt[1] == 0) castleSt[0] = -1;
+            if ( (nt.From == 8) && castleSt[1] == 2) castleSt[0] = 1;
+        }
+    }
+        
 }

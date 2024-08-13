@@ -30,7 +30,7 @@ public:
     
     int countHistory = 0;
     
-    int castleSt = 2; // castle state
+    std::array<int, 2> castleSt {2, 2}; // castle state
     
     /* for boardarray:
      
@@ -51,7 +51,7 @@ public:
     
     // Using the arguments, changes boardarray and history accordingly.
     void translateToVirtual(const vector<Piece*>& PiecesVector,
-                            const vector<Notate*>& History, int);
+                            const vector<Notate*>& History, const std::array<int, 2>&);
     
     void putPiece(int, PieceType, PieceColor);
     

@@ -17,6 +17,6 @@ bool TakeTurns = true;
 bool CanCreate = false;
 bool Serious = true; // non-debug
 
-int castleState = 2;
+std::array<int, 2> castleState {2, 2};
 
 Check Checking = NOCHECK;
