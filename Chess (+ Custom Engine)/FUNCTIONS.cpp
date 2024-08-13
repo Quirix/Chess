@@ -693,8 +693,7 @@ void UpdateLegalMoves(std::vector<Move>& LegalMoves, Piece* pc, std::vector<Nota
         for (auto e : legals) {
             
             if (e.square) LegalMoves.push_back(e);
-            std::cout << "legal\n";
-        } std::cout << "\n\n\n";
+        }
         
     }
     
@@ -703,9 +702,9 @@ void UpdateLegalMoves(std::vector<Move>& LegalMoves, Piece* pc, std::vector<Nota
     VirtualBoard vb;
     
     for (auto it = LegalMoves.begin(); it != LegalMoves.end();) {
-        vb.translateToVirtual(*PiecesVector, *history, castleSt);
+        vb.translateToVirtual(*PiecesVector, *history, vb.castleSt);
         
-        moveInfPiece(vb.boardarray, LNotate{CLASSIC, normalToInf(type, piececolor), pc->OnSquare->BoardPosition_num, (*it).square->BoardPosition_num}, vb.history, vb.countHistory, castleSt);
+        moveInfPiece(vb.boardarray, LNotate{CLASSIC, normalToInf(type, piececolor), pc->OnSquare->BoardPosition_num, (*it).square->BoardPosition_num}, vb.history, vb.countHistory, vb.castleSt);
         
         if ( ((piececolor == WHITE) && canTakeWhiteKingAll(vb.boardarray, vb.history, vb.castleSt)) || ( (piececolor == BLACK) && canTakeBlackKingAll(vb.boardarray, vb.history, vb.castleSt) ))
         {
@@ -1033,6 +1032,7 @@ int normalToInf(PieceType type, PieceColor color)
 void updateCastleStateInf(int inf, int From, std::array<int, 2>& castleSt) {
     if ( (getColorInf(inf) == WHITE) && (castleSt[0] != -1) ) {
         if (inf == 6) castleSt[0] = -1;
+       // std::cout << inf<<'\n';
         if (inf == 4)
         {
             // 57 = queenside == 0
@@ -1044,15 +1044,15 @@ void updateCastleStateInf(int inf, int From, std::array<int, 2>& castleSt) {
         }
     }
     
-    else {
+    else if ( (getColorInf(inf) == BLACK) && (castleSt[1] != -1) ) {
         if (inf == -6) castleSt[1] = -1;
         if (inf == -4)
         {
-            if ( (From == 1) && castleSt[1] == 1) castleSt[0] = -1;
-            if ( (From == 1) && castleSt[1] == 2) castleSt[0] = 0;
+            if ( (From == 1) && castleSt[1] == 1) castleSt[1] = -1;
+            if ( (From == 1) && castleSt[1] == 2) castleSt[1] = 0;
             
-            if ( (From == 8) && castleSt[1] == 0) castleSt[0] = -1;
-            if ( (From == 8) && castleSt[1] == 2) castleSt[0] = 1;
+            if ( (From == 8) && castleSt[1] == 0) castleSt[1] = -1;
+            if ( (From == 8) && castleSt[1] == 2) castleSt[1] = 1;
         }
     }
 }
@@ -1065,7 +1065,7 @@ void moveInfPiece(std::array<int, 64>& intBoard, const LNotate& nt, std::array<L
     }
     
     if (intBoard[nt.To-1] != 0) {
-        std::cerr << "(FUNCTIONS.cpp) [WARNING} in function moveInfPiece(..) LNotate& nt at intBoard[nt.To-1] != 0 or a piece exists where this inf piece wants to move to.\nContinuing code.\n";
+        std::cerr << "(FUNCTIONS.cpp) [WARNING} in function moveInfPiece(..) LNotate& nt at intBoard[nt.To-1] != 0 or a piece exists where this inf piece wants to move to " << nt.From << ',' << nt.To << ',' << intBoard[nt.To-1] << "\nContinuing code.\n";
     }
     
     intBoard[nt.From-1] = 0;
@@ -1076,6 +1076,6 @@ void moveInfPiece(std::array<int, 64>& intBoard, const LNotate& nt, std::array<L
     history[count].special = nt.special;
     count++;
     
-    
+    updateCastleStateInf(nt.inf, nt.From, castleSt);
         
 }

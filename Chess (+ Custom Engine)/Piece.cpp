@@ -8,6 +8,7 @@
 #include "BoardPosition.h"
 #include "FUNCTIONS.h"
 #include "Piece.h"
+#include "VirtualBoard.hpp"
 
 #define UL ++
 #define DR --
@@ -124,9 +125,6 @@ Piece::Piece(PieceType arg_piecetype, PieceColor arg_piececolor, Square* arg_ons
  */
 
 void Piece::MoveTo(Move& var_square) {
-    
-    
-    
     bool took = (var_square.type == TAKE);
     bool backRcreate = ( (OnSquare == var_square.square) || (var_square.type == CREATE) );
     
@@ -153,13 +151,6 @@ void Piece::MoveTo(Move& var_square) {
     //std::cout << "equation2: " << recpos.x + (recsize.x - rec->getSize().x) << '\n';
     //std::cout << "equation3: " << recpos.x + (recsize.x - rec->getSize().x) / 2 << '\n';
     //##debug
-    
-    
-    
-    // *****
-    // huge problem to fix is with future
-    // do what i did with tictactoe
-    // *****
     
     rec->setPosition( recpos.x/* + (recsize.x - rec->getSize().x) /2*/ , recpos.y + 5);
     OnSquare = var_square.square;
@@ -263,6 +254,12 @@ bool Piece::OnMouseRelease(bool isTurn = true) {
                 return false;
             }
             
+            updateCastleStateInf(normalToInf(type, piececolor), OnSquare->BoardPosition_num, castleState);
+            
+            std::cout << "bpn: " << OnSquare->BoardPosition_num << '\n';
+            
+            std::cout << "castleState: " << castleState[0] << ' ' << castleState[1] << '\n';
+            
             MoveTo(move);
             
             /*
@@ -270,9 +267,6 @@ bool Piece::OnMouseRelease(bool isTurn = true) {
                piececolor is white (1) and checking is black to white (1)
                and the opposite, then the checking variable is set to nocheck.
             */
-            
-            if (type == KING && (int)piececolor == (int) Checking)
-                Checking = NOCHECK; // if legalmoves work then this works too
             
             return true;
             
