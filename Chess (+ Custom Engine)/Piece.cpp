@@ -256,10 +256,6 @@ bool Piece::OnMouseRelease(bool isTurn = true) {
             
             updateCastleStateInf(normalToInf(type, piececolor), OnSquare->BoardPosition_num, castleState);
             
-            std::cout << "bpn: " << OnSquare->BoardPosition_num << '\n';
-            
-            std::cout << "castleState: " << castleState[0] << ' ' << castleState[1] << '\n';
-            
             MoveTo(move);
             
             /*

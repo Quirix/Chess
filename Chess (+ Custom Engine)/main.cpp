@@ -288,8 +288,6 @@ int main(){
         else if (canTakeBlackKingAll()) Checking = WHITETOBLACK;
         else Checking = NOCHECK;
         
-        //std::cout << (int) Checking << '\n';
-        
         window.clear();
         
         // Draw

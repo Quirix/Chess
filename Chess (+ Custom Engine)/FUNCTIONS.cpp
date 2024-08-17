@@ -690,6 +690,24 @@ void UpdateLegalMoves(std::vector<Move>& LegalMoves, Piece* pc, std::vector<Nota
             
         }
         
+        const int correctindex = (piececolor == WHITE) ? 0 : 1;
+        
+        if ( (castleSt[correctindex] == 1) || (castleSt[correctindex] == 2) )
+        {
+            if ( (PL(pos, -1, 0) && (!PL(pos, -1, 0)->HoldingPiece)) && (PL(pos, -2, 0) && (!PL(pos, -2, 0)->HoldingPiece)) && (PL(pos, -3, 0) && (!PL(pos, -3, 0)->HoldingPiece)) )
+            {
+                legals.push_back(Move{PL(pos, -2, 0), MOVE, CASTLE});
+            }
+        }
+        
+        if ( (castleSt[correctindex] == 0) || (castleSt[correctindex] == 2) )
+        {
+            if ( (PL(pos, 1, 0) && (!PL(pos, 1, 0)->HoldingPiece)) && (PL(pos, 2, 0) && (!PL(pos, 2, 0)->HoldingPiece)) )
+            {
+                legals.push_back(Move{PL(pos, 2, 0), MOVE, CASTLE});
+            }
+        }
+        
         for (auto e : legals) {
             
             if (e.square) LegalMoves.push_back(e);
@@ -704,7 +722,8 @@ void UpdateLegalMoves(std::vector<Move>& LegalMoves, Piece* pc, std::vector<Nota
     for (auto it = LegalMoves.begin(); it != LegalMoves.end();) {
         vb.translateToVirtual(*PiecesVector, *history, vb.castleSt);
         
-        moveInfPiece(vb.boardarray, LNotate{CLASSIC, normalToInf(type, piececolor), pc->OnSquare->BoardPosition_num, (*it).square->BoardPosition_num}, vb.history, vb.countHistory, vb.castleSt);
+        if (vb.boardarray[pc->OnSquare->BoardPosition_num-1] != 0)
+            moveInfPiece(vb.boardarray, LNotate{CLASSIC, normalToInf(type, piececolor), pc->OnSquare->BoardPosition_num, (*it).square->BoardPosition_num}, vb.history, vb.countHistory, vb.castleSt);
         
         if ( ((piececolor == WHITE) && canTakeWhiteKingAll(vb.boardarray, vb.history, vb.castleSt)) || ( (piececolor == BLACK) && canTakeBlackKingAll(vb.boardarray, vb.history, vb.castleSt) ))
         {
@@ -1059,13 +1078,11 @@ void updateCastleStateInf(int inf, int From, std::array<int, 2>& castleSt) {
 
 void moveInfPiece(std::array<int, 64>& intBoard, const LNotate& nt, std::array<LNotate, 50>& history, int& count, std::array<int, 2>& castleSt) {
     
+    // keep in mind that this could also be used to TAKE pieces.
+    
     if (intBoard[nt.From-1] == 0) {
         std::cerr << "(FUNCTIONS.cpp) [ERROR] in function moveInfPiece(..) LNotate& nt at intBoard[nt.from-1] == 0 or at the index in which is marked as having a piece doesn't have a piece.\n";
         return;
-    }
-    
-    if (intBoard[nt.To-1] != 0) {
-        std::cerr << "(FUNCTIONS.cpp) [WARNING} in function moveInfPiece(..) LNotate& nt at intBoard[nt.To-1] != 0 or a piece exists where this inf piece wants to move to " << nt.From << ',' << nt.To << ',' << intBoard[nt.To-1] << "\nContinuing code.\n";
     }
     
     intBoard[nt.From-1] = 0;
