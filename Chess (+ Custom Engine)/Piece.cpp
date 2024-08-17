@@ -124,7 +124,7 @@ Piece::Piece(PieceType arg_piecetype, PieceColor arg_piececolor, Square* arg_ons
  
  */
 
-void Piece::MoveTo(Move& var_square) {
+void Piece::MoveTo(Move& var_square, bool sendToHistory) {
     bool took = (var_square.type == TAKE);
     bool backRcreate = ( (OnSquare == var_square.square) || (var_square.type == CREATE) );
     
@@ -160,9 +160,36 @@ void Piece::MoveTo(Move& var_square) {
     
     /*else*/ UpdateLegalMoves(LegalMoves, this, History);
     
+    // castle
+    
+    if (var_square.special == CASTLE) {
+        if ( (var_square.square->BoardPosition_num == 63) || (var_square.square->BoardPosition_num == 7) )
+        {
+            // kingside
+            
+            if (PL(var_square.square->BoardPosition_notation, 1, 0)) {
+                    
+                 Piece* rookpiece = ((PL(var_square.square->BoardPosition_notation, 1, 0)))->HoldingPiece;
+                Move mv = Move{ PL(var_square.square->BoardPosition_notation, -1, 0)};
+                if (rookpiece) rookpiece->MoveTo(mv, false);
+            }
+        }
+        
+        else {
+            // queenside
+            
+            if (PL(var_square.square->BoardPosition_notation, -2, 0)) {
+                    
+                 Piece* rookpiece = ((PL(var_square.square->BoardPosition_notation, -2, 0)))->HoldingPiece;
+                Move mv = Move{ PL(var_square.square->BoardPosition_notation, 1, 0)};
+                if (rookpiece) rookpiece->MoveTo(mv, false);
+            }
+        }
+    }
+    
     TypeNoT tn = (!took) ? MOVE : TAKE; // what the hell was i thinking here.
     
-    if (!backRcreate) History->push_back( new Notate{tn, OldSquare, OnSquare, var_square.special} );
+    if ( (!backRcreate) && sendToHistory) History->push_back( new Notate{tn, OldSquare, OnSquare, var_square.special} );
     
 }
 
@@ -257,6 +284,7 @@ bool Piece::OnMouseRelease(bool isTurn = true) {
             updateCastleStateInf(normalToInf(type, piececolor), OnSquare->BoardPosition_num, castleState);
             
             MoveTo(move);
+            // the function is responsible for castle AddNoT moves.
             
             /*
                piece moves, and this if statement below says that if

@@ -64,7 +64,7 @@ public:
           vector<Square*>* bv,
           vector<Piece*>* pv, vector<Notate*>* hs);
     void die(); // use when piece takes piece2, piece2.die();
-    void MoveTo(Move& var_square);
+    void MoveTo(Move& var_square, bool sendToHistory = true);
     
     bool CanTakeOppositeKing();
     
