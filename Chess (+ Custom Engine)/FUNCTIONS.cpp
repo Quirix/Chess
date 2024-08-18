@@ -671,7 +671,7 @@ void UpdateLegalMoves(std::vector<Move>& LegalMoves, Piece* pc, std::vector<Nota
         }
     }
     
-    else if (type == KING) { // CASTLING NOT IMPLEMENTED
+    else if (type == KING) {
         vector<Move> legals{};
         
         for (int i = 0; i <= 8; i++) {
@@ -691,6 +691,8 @@ void UpdateLegalMoves(std::vector<Move>& LegalMoves, Piece* pc, std::vector<Nota
         }
         
         const int correctindex = (piececolor == WHITE) ? 0 : 1;
+        
+        // castling
         
         if ( (castleSt[correctindex] == 1) || (castleSt[correctindex] == 2) )
         {
@@ -972,7 +974,7 @@ void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std
         }
     }
     
-    else if (type == KING) { // CASTLING NOT IMPLEMENTED
+    else if (type == KING) {
         vector<int> legals{};
         
         for (int i = 0; i <= 8; i++) {
@@ -990,47 +992,32 @@ void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std
             
         }
         
+        const int correctindex = (piececolor == WHITE) ? 0 : 1;
+        
+        if ( (castleSt[correctindex] == 1) || (castleSt[correctindex] == 2) )
+        {
+            if ( (PL(boardIndex, -1, 0) != -1 && (intBoard[PL(boardIndex, -1, 0)-1] == 0) && (PL(boardIndex, -2, 0)) != -1 && (intBoard[PL(boardIndex, -2, 0)-1] == 0)) && (PL(boardIndex, -3, 0)) != -1 && ( intBoard[PL(boardIndex, -3, 0)-1] == 0))
+            {
+                legals.push_back(PL(boardIndex, -2, 0));
+            }
+        }
+        
+        if ( (castleSt[correctindex] == 0) || (castleSt[correctindex] == 2) )
+        {
+            if (
+                (PL(boardIndex, 1, 0) != -1 && (intBoard[PL(boardIndex, 1, 0)-1] == 0) && (PL(boardIndex, 2, 0) != -1 && (intBoard[PL(pos, 2, 0)-1] == 0))
+                 ) )
+            {
+                legals.push_back(PL(pos, 2, 0));
+            }
+        }
+        
         if (Serious && (Checking == (Check) piececolor) ) // if we are in check
         {
             ;
         }
         
-        // remove moves that will result in check
-        
-        //* bugged 100 out of 100 percent
-        
-        /*for(int i = 0; i < legals.size(); i++)
-        {
-            std::cout << piececolor << ' ' << i << '\n';
-            Move& e = legals[i];
-            
-            bool canttk = false;
-            
-            //if (piececolor == WHITE) canttk = doPieceTypeAllContain(BLACK, e.square);
-            //else canttk = doPieceTypeAllContain(WHITE, e.square);
-            //std::cout << "canttk = " << canttk << '\n';
-             
-             
-            
-            
-            //FUTURE method doesn't work.
-            
-            MoveTo(e, true);
-            
-            if (piececolor == WHITE)
-                canttk = canTakeWhiteKingAll();
-            if (piececolor == BLACK)
-                canttk = canTakeBlackKingAll();
-            
-            Move moveback = Move{OldSquare};
-            MoveTo(moveback, true);
-            
-            if (canttk == true) {
-                auto it = (legals.begin()+i);
-                legals.erase(it);
-            }
-            
-        }*/
+        // no checking if future moves will result in check
         
         for (auto e : legals) {
             if (e != -1) LegalMoves.push_back(e);
@@ -1095,4 +1082,25 @@ void moveInfPiece(std::array<int, 64>& intBoard, const LNotate& nt, std::array<L
     
     updateCastleStateInf(nt.inf, nt.From, castleSt);
         
+}
+
+bool checkForCastlingInf(int pos, std::array<int, 64>& intBoard, std::array<LNotate, 50>& history, std::array<int, 2>& castleSt) {
+    
+    if (getTypeInf(intBoard[pos-1] != KING) ) return false;
+    
+    std::vector<int> lgl;
+    
+    UpdateLegalMoves(lgl, pos, intBoard[pos-1], &history, intBoard, castleSt);
+    
+    for (auto e : lgl)
+    {
+        std::cout << e;
+    } std::cout << '\n';
+    
+    for (auto e : lgl) {
+        if ( ((PL(e, -2, 0) == pos) || ((PL(e, 2, 0) == pos)) ) )
+            return true;
+    }
+    
+    return false;
 }
