@@ -722,10 +722,16 @@ void UpdateLegalMoves(std::vector<Move>& LegalMoves, Piece* pc, std::vector<Nota
     VirtualBoard vb;
     
     for (auto it = LegalMoves.begin(); it != LegalMoves.end();) {
+        AddNoT adnt = CLASSIC;
+        if ( (pc->type == KING) && (
+            (PL(pc->OnSquare->BoardPosition_num, 2, 0) == (*it).square->BoardPosition_num)
+            || (PL(pc->OnSquare->BoardPosition_num, -2, 0) == (*it).square->BoardPosition_num)
+            ) ) adnt = CASTLE;
+        
         vb.translateToVirtual(*PiecesVector, *history, vb.castleSt);
         
         if (vb.boardarray[pc->OnSquare->BoardPosition_num-1] != 0)
-            moveInfPiece(vb.boardarray, LNotate{CLASSIC, normalToInf(type, piececolor), pc->OnSquare->BoardPosition_num, (*it).square->BoardPosition_num}, vb.history, vb.countHistory, vb.castleSt);
+            moveInfPiece(vb.boardarray, LNotate{adnt, normalToInf(type, piececolor), pc->OnSquare->BoardPosition_num, (*it).square->BoardPosition_num}, vb.history, vb.countHistory, vb.castleSt);
         
         if ( ((piececolor == WHITE) && canTakeWhiteKingAll(vb.boardarray, vb.history, vb.castleSt)) || ( (piececolor == BLACK) && canTakeBlackKingAll(vb.boardarray, vb.history, vb.castleSt) ))
         {
@@ -1072,6 +1078,21 @@ void moveInfPiece(std::array<int, 64>& intBoard, const LNotate& nt, std::array<L
         return;
     }
     
+    if (nt.special == CASTLE) {
+        if (nt.To == 63 || nt.To == 7)
+        {
+            int i = intBoard[PL(nt.To, 1, 0)-1];
+            intBoard[PL(nt.To, 1, 0)-1] = 0;
+            intBoard[PL(nt.To, -1, 0)-1] = i;
+        }
+        
+        else {
+            int i = intBoard[PL(nt.To, -2, 0)-1];
+            intBoard[PL(nt.To, -2, 0)-1] = 0;
+            intBoard[PL(nt.To, 1, 0)-1] = i;
+        }
+    }
+    
     intBoard[nt.From-1] = 0;
     intBoard[nt.To-1] = nt.inf;
     history[count].From = nt.From;
@@ -1079,6 +1100,12 @@ void moveInfPiece(std::array<int, 64>& intBoard, const LNotate& nt, std::array<L
     history[count].inf = nt.inf;
     history[count].special = nt.special;
     count++;
+    
+    if (nt.special == CASTLE) {
+        for (auto e : intBoard) {
+            std::cout << e;
+        } std::cout << '\n';
+    }
     
     updateCastleStateInf(nt.inf, nt.From, castleSt);
         
@@ -1091,11 +1118,6 @@ bool checkForCastlingInf(int pos, std::array<int, 64>& intBoard, std::array<LNot
     std::vector<int> lgl;
     
     UpdateLegalMoves(lgl, pos, intBoard[pos-1], &history, intBoard, castleSt);
-    
-    for (auto e : lgl)
-    {
-        std::cout << e;
-    } std::cout << '\n';
     
     for (auto e : lgl) {
         if ( ((PL(e, -2, 0) == pos) || ((PL(e, 2, 0) == pos)) ) )
