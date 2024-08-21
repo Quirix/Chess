@@ -71,7 +71,7 @@ void putPiecesInBoard();
 
 void UpdateLegalMoves(std::vector<Move>&, Piece*, std::vector<Notate*>*, std::array<int, 2>& cstl=castleState);
 
-void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std::array<LNotate, 50>* history, std::array<int, 64>& intBoard, std::array<int, 2>&);
+void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std::array<LNotate, 50>* history, std::array<int, 64>& intBoard, std::array<int, 2>&, bool castlenfuture=false);
 
 PieceType getTypeInf(int);
 // Inf stands for int form

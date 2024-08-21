@@ -279,6 +279,18 @@ int main(){
         
         //std::cout << "\n\n\n\n\n\n\n\n";
         
+        VirtualBoard vb;
+        vb.translateToVirtual(PiecesVector, History, castleState);
+        
+        std::vector<int> lglmv;
+        
+        UpdateLegalMoves(lglmv, 61, 6, &vb.history, vb.boardarray, vb.castleSt, true);
+        
+        for (auto e : lglmv)
+        {
+            std::cout << e << ' ';
+        } std::cout << '\n';
+        
         //#####debug######
         
         for (auto* element : BoardVector) element->update();

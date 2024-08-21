@@ -707,7 +707,7 @@ void UpdateLegalMoves(std::vector<Move>& LegalMoves, Piece* pc, std::vector<Nota
                 vb.translateToVirtual(*PiecesVector, *history, castleSt);
                 moveInfPiece(vb.boardarray, LNotate{CLASSIC, 6, 61, 62}, vb.history, vb.countHistory, vb.castleSt);
                 
-                if (!canTakeWhiteKingAll(vb.boardarray, vb.history, vb.castleSt)) legals.push_back(Move{PL(pos, 2, 0), MOVE, CASTLE});
+                if ( ((piececolor == WHITE) &&  (!canTakeWhiteKingAll(vb.boardarray, vb.history, vb.castleSt))) || ( (piececolor == BLACK) && (!canTakeBlackKingAll(vb.boardarray, vb.history, vb.castleSt))))  legals.push_back(Move{PL(pos, 2, 0), MOVE, CASTLE});
             }
         }
         
@@ -722,13 +722,11 @@ void UpdateLegalMoves(std::vector<Move>& LegalMoves, Piece* pc, std::vector<Nota
                 vb.translateToVirtual(*PiecesVector, *history, castleSt);
                 moveInfPiece(vb.boardarray, LNotate{CLASSIC, 6, 61, 60}, vb.history, vb.countHistory, vb.castleSt);
                 
-                if (!canTakeWhiteKingAll(vb.boardarray, vb.history, vb.castleSt))
+                if ( ((piececolor == WHITE) &&  (!canTakeWhiteKingAll(vb.boardarray, vb.history, vb.castleSt))) || ( (piececolor == BLACK) && (!canTakeBlackKingAll(vb.boardarray, vb.history, vb.castleSt))))
                     legals.push_back(Move{PL(pos, -2, 0), MOVE, CASTLE});
                 
             }
         }
-        
-        std::cout << "cs: " << castleSt[0] << castleSt[1] << '\n';
         
         for (auto e : legals) {
             
@@ -796,7 +794,7 @@ Check getCheckState(std::array<int, 64>& intBoard, std::array<LNotate, 50>& hist
 
 // intform stands is piece color and type in integer form
 // (comments how it works in VirtualBoard.hpp)
-void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std::array<LNotate, 50>* history, std::array<int, 64>& intBoard, std::array<int, 2>& castleSt) {
+void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std::array<LNotate, 50>* history, std::array<int, 64>& intBoard, std::array<int, 2>& castleSt, bool castleNFuture) {
 
     if (inf == 0) return;
     
@@ -1032,6 +1030,7 @@ void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std
             if ( (PL(boardIndex, -1, 0) != -1 && (intBoard[PL(boardIndex, -1, 0)-1] == 0) && (PL(boardIndex, -2, 0)) != -1 && (intBoard[PL(boardIndex, -2, 0)-1] == 0)) && (PL(boardIndex, -3, 0)) != -1 && ( intBoard[PL(boardIndex, -3, 0)-1] == 0)
                 )
             {
+                //std::cout << (int) getCheckState(intBoard, *history, castleSt) << '\n';
                 legals.push_back(PL(boardIndex, -2, 0));
             }
         }
