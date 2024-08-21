@@ -701,10 +701,13 @@ void UpdateLegalMoves(std::vector<Move>& LegalMoves, Piece* pc, std::vector<Nota
         if ( (castleSt[correctindex] == 1) || (castleSt[correctindex] == 2) )
         { // kingside
             if ((PL(pos, 1, 0) && (!PL(pos, 1, 0)->HoldingPiece)) && (PL(pos, 2, 0) && (!PL(pos, 2, 0)->HoldingPiece)
-                ) )
+                ) && (Checking == NOCHECK))
             {
-                legals.push_back(Move{PL(pos, 2, 0), MOVE, CASTLE});
-                std::cout << "kingside\n";
+                VirtualBoard vb;
+                vb.translateToVirtual(*PiecesVector, *history, castleSt);
+                moveInfPiece(vb.boardarray, LNotate{CLASSIC, 6, 61, 62}, vb.history, vb.countHistory, vb.castleSt);
+                
+                if (!canTakeWhiteKingAll(vb.boardarray, vb.history, vb.castleSt)) legals.push_back(Move{PL(pos, 2, 0), MOVE, CASTLE});
             }
         }
         
@@ -715,24 +718,13 @@ void UpdateLegalMoves(std::vector<Move>& LegalMoves, Piece* pc, std::vector<Nota
                 
             {
                 
-                /*VirtualBoard vb;
-                vb.translateToVirtual(*PiecesVector, *history, vb.castleSt);
+                VirtualBoard vb;
+                vb.translateToVirtual(*PiecesVector, *history, castleSt);
+                moveInfPiece(vb.boardarray, LNotate{CLASSIC, 6, 61, 60}, vb.history, vb.countHistory, vb.castleSt);
                 
-                moveInfPiece(vb.boardarray, LNotate(CLASSIC, 5, 61, 60), vb.history, vb.countHistory, vb.castleSt);
+                if (!canTakeWhiteKingAll(vb.boardarray, vb.history, vb.castleSt))
+                    legals.push_back(Move{PL(pos, -2, 0), MOVE, CASTLE});
                 
-                if (!canTakeWhiteKingAll(vb.boardarray, vb.history, vb.castleSt))*/
-                legals.push_back(Move{PL(pos, -2, 0), MOVE, CASTLE});
-                std::cout << "queenside\n";
-                //std::cout << vb.boardarray[61] << '\n';
-                //std::cout << castleSt[0] << castleSt[1] << '\n';
-                
-            }
-            else
-            {
-                std::cout << (!!PL(pos, -1, 0)) << ',' << (!PL(pos, -1, 0)->HoldingPiece) << ',' <<
-                (!!PL(pos, -2, 0)) << ',' << (!PL(pos, -2, 0)->HoldingPiece) << ',' << (!!PL(pos, -3, 0)) << ',' <<
-                (!PL(pos, -3, 0)->HoldingPiece) << '\n';
-                std::cout << (int) Checking << '\n';
             }
         }
         
