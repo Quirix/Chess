@@ -340,7 +340,7 @@ bool canTakeWhiteKingAll(){
     return false;
 }
 
-bool canTakeBlackKingAll(const std::array<int, 64>& intBoard, std::array<LNotate, 50>& history, std::array<int, 2>& castleSt) {
+bool canTakeBlackKingAll(std::array<int, 64>& intBoard, std::array<LNotate, 50>& history, std::array<int, 2>& castleSt) {
     for (int i = 0 ; i < 64; i++) {
         const int& e = intBoard[i];
         if (getColorInf(e) == WHITE) {
@@ -351,7 +351,7 @@ bool canTakeBlackKingAll(const std::array<int, 64>& intBoard, std::array<LNotate
     return false;
 }
 
-bool canTakeWhiteKingAll(const std::array<int, 64>& intBoard, std::array<LNotate, 50>& history, std::array<int, 2>& castleSt) {
+bool canTakeWhiteKingAll(std::array<int, 64>& intBoard, std::array<LNotate, 50>& history, std::array<int, 2>& castleSt) {
     for (int i = 0 ; i < 64; i++) {
         const int& e = intBoard[i];
         if (getColorInf(e) == BLACK) {
@@ -362,7 +362,7 @@ bool canTakeWhiteKingAll(const std::array<int, 64>& intBoard, std::array<LNotate
     return false;
 }
 
-bool canTakeKingInf(const std::array<int, 64>& intBoard, int index, std::array<LNotate, 50>& history, std::array<int, 2>& castleSt) {
+bool canTakeKingInf(std::array<int, 64>& intBoard, int index, std::array<LNotate, 50>& history, std::array<int, 2>& castleSt) {
     PieceColor clr = getColorInf(intBoard[index-1]);
     std::vector<int> legalmoves;
     UpdateLegalMoves(legalmoves, index, intBoard[index-1], &history, intBoard, castleSt);
@@ -694,21 +694,49 @@ void UpdateLegalMoves(std::vector<Move>& LegalMoves, Piece* pc, std::vector<Nota
         
         // castling
         
+        /*
+         WARNING: uses Checking variable to check if there is no current check happening.
+         */
+        
         if ( (castleSt[correctindex] == 1) || (castleSt[correctindex] == 2) )
-        {
-            if ( (PL(pos, -1, 0) && (!PL(pos, -1, 0)->HoldingPiece)) && (PL(pos, -2, 0) && (!PL(pos, -2, 0)->HoldingPiece)) && (PL(pos, -3, 0) && (!PL(pos, -3, 0)->HoldingPiece)) )
+        { // kingside
+            if ((PL(pos, 1, 0) && (!PL(pos, 1, 0)->HoldingPiece)) && (PL(pos, 2, 0) && (!PL(pos, 2, 0)->HoldingPiece)
+                ) )
             {
-                legals.push_back(Move{PL(pos, -2, 0), MOVE, CASTLE});
+                legals.push_back(Move{PL(pos, 2, 0), MOVE, CASTLE});
+                std::cout << "kingside\n";
             }
         }
         
         if ( (castleSt[correctindex] == 0) || (castleSt[correctindex] == 2) )
-        {
-            if ( (PL(pos, 1, 0) && (!PL(pos, 1, 0)->HoldingPiece)) && (PL(pos, 2, 0) && (!PL(pos, 2, 0)->HoldingPiece)) )
+        { // queenside
+            if ( (PL(pos, -1, 0) && (!PL(pos, -1, 0)->HoldingPiece)) && (PL(pos, -2, 0) && (!PL(pos, -2, 0)->HoldingPiece)) && (PL(pos, -3, 0) && (!PL(pos, -3, 0)->HoldingPiece))
+                && (Checking == NOCHECK))
+                
             {
-                legals.push_back(Move{PL(pos, 2, 0), MOVE, CASTLE});
+                
+                /*VirtualBoard vb;
+                vb.translateToVirtual(*PiecesVector, *history, vb.castleSt);
+                
+                moveInfPiece(vb.boardarray, LNotate(CLASSIC, 5, 61, 60), vb.history, vb.countHistory, vb.castleSt);
+                
+                if (!canTakeWhiteKingAll(vb.boardarray, vb.history, vb.castleSt))*/
+                legals.push_back(Move{PL(pos, -2, 0), MOVE, CASTLE});
+                std::cout << "queenside\n";
+                //std::cout << vb.boardarray[61] << '\n';
+                //std::cout << castleSt[0] << castleSt[1] << '\n';
+                
+            }
+            else
+            {
+                std::cout << (!!PL(pos, -1, 0)) << ',' << (!PL(pos, -1, 0)->HoldingPiece) << ',' <<
+                (!!PL(pos, -2, 0)) << ',' << (!PL(pos, -2, 0)->HoldingPiece) << ',' << (!!PL(pos, -3, 0)) << ',' <<
+                (!PL(pos, -3, 0)->HoldingPiece) << '\n';
+                std::cout << (int) Checking << '\n';
             }
         }
+        
+        std::cout << "cs: " << castleSt[0] << castleSt[1] << '\n';
         
         for (auto e : legals) {
             
@@ -767,9 +795,16 @@ PieceColor getColorInf(int inf) {
     else return BLACK;
 }
 
+Check getCheckState(std::array<int, 64>& intBoard, std::array<LNotate, 50>& history, std::array<int, 2>& castleSt) {
+    
+    if (canTakeWhiteKingAll(intBoard, history, castleSt)) return BLACKTOWHITE;
+    if (canTakeBlackKingAll(intBoard, history, castleSt)) return WHITETOBLACK;
+    return NOCHECK;
+}
+
 // intform stands is piece color and type in integer form
 // (comments how it works in VirtualBoard.hpp)
-void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std::array<LNotate, 50>* history, const std::array<int, 64>& intBoard, std::array<int, 2>& castleSt) {
+void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std::array<LNotate, 50>* history, std::array<int, 64>& intBoard, std::array<int, 2>& castleSt) {
 
     if (inf == 0) return;
     
@@ -1001,18 +1036,20 @@ void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std
         const int correctindex = (piececolor == WHITE) ? 0 : 1;
         
         if ( (castleSt[correctindex] == 1) || (castleSt[correctindex] == 2) )
-        {
-            if ( (PL(boardIndex, -1, 0) != -1 && (intBoard[PL(boardIndex, -1, 0)-1] == 0) && (PL(boardIndex, -2, 0)) != -1 && (intBoard[PL(boardIndex, -2, 0)-1] == 0)) && (PL(boardIndex, -3, 0)) != -1 && ( intBoard[PL(boardIndex, -3, 0)-1] == 0))
+        { // kingside
+            if ( (PL(boardIndex, -1, 0) != -1 && (intBoard[PL(boardIndex, -1, 0)-1] == 0) && (PL(boardIndex, -2, 0)) != -1 && (intBoard[PL(boardIndex, -2, 0)-1] == 0)) && (PL(boardIndex, -3, 0)) != -1 && ( intBoard[PL(boardIndex, -3, 0)-1] == 0)
+                )
             {
                 legals.push_back(PL(boardIndex, -2, 0));
             }
         }
         
         if ( (castleSt[correctindex] == 0) || (castleSt[correctindex] == 2) )
-        {
+        { // queenside
             if (
-                (PL(boardIndex, 1, 0) != -1 && (intBoard[PL(boardIndex, 1, 0)-1] == 0) && (PL(boardIndex, 2, 0) != -1 && (intBoard[PL(pos, 2, 0)-1] == 0))
-                 ) )
+                (PL(boardIndex, 1, 0) != -1 && (intBoard[PL(boardIndex, 1, 0)-1] == 0) && (PL(boardIndex, 2, 0) != -1 && (intBoard[PL(pos, 2, 0)-1] == 0)))
+                
+                )
             {
                 legals.push_back(PL(pos, 2, 0));
             }
@@ -1049,10 +1086,10 @@ void updateCastleStateInf(int inf, int From, std::array<int, 2>& castleSt) {
         {
             // 57 = queenside == 0
             if ( (From == 57) && castleSt[0] == 1) castleSt[0] = -1;
-            if ( (From == 57) && castleSt[0] == 2) castleSt[0] = 0;
+            if ( (From == 57) && castleSt[0] == 2) castleSt[0] = 1; // opposite
             
             if ( (From == 64) && castleSt[0] == 0) castleSt[0] = -1;
-            if ( (From == 64) && castleSt[0] == 2) castleSt[0] = 1;
+            if ( (From == 64) && castleSt[0] == 2) castleSt[0] = 0; // oppsite
         }
     }
     
@@ -1061,10 +1098,10 @@ void updateCastleStateInf(int inf, int From, std::array<int, 2>& castleSt) {
         if (inf == -4)
         {
             if ( (From == 1) && castleSt[1] == 1) castleSt[1] = -1;
-            if ( (From == 1) && castleSt[1] == 2) castleSt[1] = 0;
+            if ( (From == 1) && castleSt[1] == 2) castleSt[1] = 1;
             
             if ( (From == 8) && castleSt[1] == 0) castleSt[1] = -1;
-            if ( (From == 8) && castleSt[1] == 2) castleSt[1] = 1;
+            if ( (From == 8) && castleSt[1] == 2) castleSt[1] = 0;
         }
     }
 }
@@ -1100,12 +1137,6 @@ void moveInfPiece(std::array<int, 64>& intBoard, const LNotate& nt, std::array<L
     history[count].inf = nt.inf;
     history[count].special = nt.special;
     count++;
-    
-    if (nt.special == CASTLE) {
-        for (auto e : intBoard) {
-            std::cout << e;
-        } std::cout << '\n';
-    }
     
     updateCastleStateInf(nt.inf, nt.From, castleSt);
         

@@ -17,7 +17,7 @@ enum Check {
 
 extern std::array<int, 2> castleState;
 
-/* ^^^ castleState doc
+/* castleState
  (only if space is given and square is not attacked and +)
  (so not to track the whole history. Changes when king moves or rook)
  2: king able to castle both ways
