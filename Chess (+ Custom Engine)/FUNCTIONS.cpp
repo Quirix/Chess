@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <sstream>
 
 #include "GLOBAL.h"
 #include "BoardPosition.h"
@@ -365,7 +366,7 @@ bool canTakeWhiteKingAll(std::array<int, 64>& intBoard, std::array<LNotate, 50>&
 bool canTakeKingInf(std::array<int, 64>& intBoard, int index, std::array<LNotate, 50>& history, std::array<int, 2>& castleSt) {
     PieceColor clr = getColorInf(intBoard[index-1]);
     std::vector<int> legalmoves;
-    UpdateLegalMoves(legalmoves, index, intBoard[index-1], &history, intBoard, castleSt);
+    UpdateLegalMoves(legalmoves, index, intBoard[index-1], &history, intBoard, castleSt, true);
     
     for (auto e : legalmoves) {
         if ( ( (clr == WHITE) && (intBoard[e-1] == -6) ) || ( (clr == BLACK) && (intBoard[e-1] == 6) ) )
@@ -443,8 +444,7 @@ bool doPieceTypeAllContain(PieceColor clr, int sqrindex, std::array<int, 64>& in
     return false;
 }
 
-void UpdateLegalMoves(std::vector<Move>& LegalMoves, Piece* pc, std::vector<Notate*>* history, std::array<int, 2>& castleSt) {
-    
+void GenerateMoves(std::vector<Move>& LegalMoves, Piece* pc, std::vector<Notate*>* history, std::array<int, 2>& castleSt) {
     BoardPositionNotation& pos = pc->OnSquare->BoardPosition_notation;
 
     LegalMoves.clear(); // MAY MESSUP WITH BOARDFLIP
@@ -703,11 +703,15 @@ void UpdateLegalMoves(std::vector<Move>& LegalMoves, Piece* pc, std::vector<Nota
             if ((PL(pos, 1, 0) && (!PL(pos, 1, 0)->HoldingPiece)) && (PL(pos, 2, 0) && (!PL(pos, 2, 0)->HoldingPiece)
                 ) && (Checking == NOCHECK))
             {
-                VirtualBoard vb;
+                /*VirtualBoard vb;
                 vb.translateToVirtual(*PiecesVector, *history, castleSt);
-                moveInfPiece(vb.boardarray, LNotate{CLASSIC, 6, 61, 62}, vb.history, vb.countHistory, vb.castleSt);
+                if (piececolor == WHITE)
+                    moveInfPiece(vb.boardarray, LNotate{CLASSIC, 6, 61, 62}, vb.history, vb.countHistory, vb.castleSt);
+                if (piececolor == BLACK)
+                    moveInfPiece(vb.boardarray, LNotate{CLASSIC, 6, 5, 6}, vb.history, vb.countHistory, vb.castleSt);*/
                 
-                if ( ((piececolor == WHITE) &&  (!canTakeWhiteKingAll(vb.boardarray, vb.history, vb.castleSt))) || ( (piececolor == BLACK) && (!canTakeBlackKingAll(vb.boardarray, vb.history, vb.castleSt))))  legals.push_back(Move{PL(pos, 2, 0), MOVE, CASTLE});
+                //if ((((piececolor == WHITE) &&  (!canTakeWhiteKingAll(vb.boardarray, vb.history, vb.castleSt))) || ( (piececolor == BLACK) && (!canTakeBlackKingAll(vb.boardarray, vb.history, vb.castleSt)))))
+                legals.push_back(Move{PL(pos, 2, 0), MOVE, CASTLE});
             }
         }
         
@@ -718,12 +722,15 @@ void UpdateLegalMoves(std::vector<Move>& LegalMoves, Piece* pc, std::vector<Nota
                 
             {
                 
-                VirtualBoard vb;
+                /*VirtualBoard vb;
                 vb.translateToVirtual(*PiecesVector, *history, castleSt);
-                moveInfPiece(vb.boardarray, LNotate{CLASSIC, 6, 61, 60}, vb.history, vb.countHistory, vb.castleSt);
+                if (piececolor == WHITE)
+                    moveInfPiece(vb.boardarray, LNotate{CLASSIC, 6, 61, 60}, vb.history, vb.countHistory, vb.castleSt);
+                if (piececolor == BLACK)
+                    moveInfPiece(vb.boardarray, LNotate{CLASSIC, 6, 5, 4}, vb.history, vb.countHistory, vb.castleSt);*/
                 
-                if ( ((piececolor == WHITE) &&  (!canTakeWhiteKingAll(vb.boardarray, vb.history, vb.castleSt))) || ( (piececolor == BLACK) && (!canTakeBlackKingAll(vb.boardarray, vb.history, vb.castleSt))))
-                    legals.push_back(Move{PL(pos, -2, 0), MOVE, CASTLE});
+                //if ( (!pseudo) && (((piececolor == WHITE) &&  (!canTakeWhiteKingAll(vb.boardarray, vb.history, vb.castleSt))) || ( (piececolor == BLACK) && (!canTakeBlackKingAll(vb.boardarray, vb.history, vb.castleSt)))))
+                legals.push_back(Move{PL(pos, -2, 0), MOVE, CASTLE});
                 
             }
         }
@@ -734,12 +741,25 @@ void UpdateLegalMoves(std::vector<Move>& LegalMoves, Piece* pc, std::vector<Nota
         }
         
     }
+}
+
+
+
+
+void UpdateLegalMoves(std::vector<Move>& LegalMoves, Piece* pc, std::vector<Notate*>* history, std::array<int, 2>& castleSt, bool pseudo) {
+    
+    PieceColor& piececolor = pc->piececolor;
+    PieceType& type = pc->type;
+    
+    GenerateMoves(LegalMoves, pc, history, castleSt);
     
     // remove moves that will result in check
     
+    if (pseudo) return;
+    
     VirtualBoard vb;
     
-    for (auto it = LegalMoves.begin(); it != LegalMoves.end();) {
+    for (auto it = LegalMoves.begin(); it != LegalMoves.end(); ) {
         AddNoT adnt = CLASSIC;
         if ( (pc->type == KING) && (
             (PL(pc->OnSquare->BoardPosition_num, 2, 0) == (*it).square->BoardPosition_num)
@@ -794,7 +814,7 @@ Check getCheckState(std::array<int, 64>& intBoard, std::array<LNotate, 50>& hist
 
 // intform stands is piece color and type in integer form
 // (comments how it works in VirtualBoard.hpp)
-void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std::array<LNotate, 50>* history, std::array<int, 64>& intBoard, std::array<int, 2>& castleSt, bool castleNFuture) {
+void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std::array<LNotate, 50>* history, std::array<int, 64>& intBoard, std::array<int, 2>& castleSt, bool pseudo) {
 
     if (inf == 0) return;
     
@@ -1051,14 +1071,40 @@ void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std
             ;
         }
         
-        // no checking if future moves will result in check
-        
         for (auto e : legals) {
             if (e != -1) LegalMoves.push_back(e);
         }
         
     }
     
+    if (pseudo) return;
+    
+    // remove moves that will result in check
+    
+    VirtualBoard vb;
+    
+    for (auto it = LegalMoves.begin(); it != LegalMoves.end();) {
+        AddNoT adnt = CLASSIC;
+        if ( (type == KING) && (
+            (PL(boardIndex, 2, 0) == (*it))
+            || (PL(boardIndex, -2, 0) == (*it))
+            ) ) adnt = CASTLE;
+        
+        vb.boardarray = intBoard;
+        vb.history = (*history);
+        vb.castleSt = castleSt;
+        vb.countHistory = 0;
+        
+        if (vb.boardarray[boardIndex-1] != 0)
+            moveInfPiece(vb.boardarray, LNotate{adnt, inf, boardIndex, (*it)}, vb.history, vb.countHistory, vb.castleSt);
+        
+        if ( ((piececolor == WHITE) && canTakeWhiteKingAll(vb.boardarray, vb.history, vb.castleSt)) || ( (piececolor == BLACK) && canTakeBlackKingAll(vb.boardarray, vb.history, vb.castleSt) ))
+        {
+            it = LegalMoves.erase(it);
+            continue;
+        }
+        it++;
+    }
     
     
 }
@@ -1147,4 +1193,159 @@ bool checkForCastlingInf(int pos, std::array<int, 64>& intBoard, std::array<LNot
     }
     
     return false;
+}
+
+std::string getBoardCode() {
+    VirtualBoard vb;
+    vb.translateToVirtual(*PiecesVector, *History, castleState);
+    
+    std::string str;
+    
+    for (auto e : vb.boardarray) {
+        str += e;
+    }
+    
+    return str;
+}
+
+std::string getBoardCode(PieceColor turn) {
+    VirtualBoard vb;
+    vb.translateToVirtual(*PiecesVector, *History, castleState);
+    
+    std::string str;
+    std::string chstr;
+    std::stringstream ss;
+
+    for (auto e : vb.boardarray) {
+        ss.str("");
+        ss.clear();
+        chstr.clear();
+        
+        ss << e;
+        ss >> chstr;
+        
+        str += chstr;
+    }
+    
+    str += ((turn == WHITE) ? "9" : "8");
+    
+    return str;
+}
+
+void printBoardCode() {
+    VirtualBoard vb;
+    vb.translateToVirtual(*PiecesVector, *History, castleState);
+    
+    for (auto e : vb.boardarray) {
+        std::cout << e;
+    }
+}
+
+void printBoardCode(PieceColor turn) {
+    VirtualBoard vb;
+    vb.translateToVirtual(*PiecesVector, *History, castleState);
+    
+    for (auto e : vb.boardarray) {
+        std::cout << e;
+    }
+    
+    std::cout << ((turn == WHITE) ? 9 : 8);
+}
+
+void intBoardToNormal(const std::string& s) {
+    bool minuscontinue = false;
+    
+    std::stringstream ss;
+    
+    int count = 0;
+    for (auto& e : s) {
+        
+        if (e=='0') {
+            count++;
+            continue;
+        }
+        
+        if (e == '-') {
+            minuscontinue = true;
+            continue;
+        }
+        
+        int inf{};
+        
+        ss.str("");
+        ss.clear();
+        
+        ss << e;
+        ss >> inf;
+        
+        if (minuscontinue)
+        {
+            minuscontinue = false;
+            inf *= -1;
+        }
+        
+        if (CordinateToSquare( (char)(findColumn(count+1)+96), findRow(count+1))) {
+        
+            Piece* piece = new Piece{getTypeInf(inf), getColorInf(inf), CordinateToSquare((char)(findColumn(count+1)+96), findRow(count+1)), makro};
+        
+            PiecesVector->push_back(piece);
+            
+        }
+        count++;
+    }
+}
+
+void intBoardToNormal(const std::string& s, PieceColor& Turn) {
+    bool minuscontinue = false;
+    
+    std::stringstream ss;
+    
+    int count = 0;
+    for (auto& e : s) {
+        
+        if (e == '9' )
+        {
+            Turn = WHITE;
+            break;
+        }
+        
+        if (e == '8' )
+        {
+            Turn = BLACK;
+            break;
+        }
+        
+        if (e=='0') {
+            count++;
+            continue;
+        }
+        
+        if (e == '-') {
+            minuscontinue = true;
+            continue;
+        }
+        
+        int inf{};
+        
+        ss.str("");
+        ss.clear();
+        
+        ss << e;
+        ss >> inf;
+        
+        if (minuscontinue)
+        {
+            minuscontinue = false;
+            inf *= -1;
+        }
+        
+        if (CordinateToSquare( (char)(findColumn(count+1)+96), findRow(count+1))) {
+        
+            Piece* piece = new Piece{getTypeInf(inf), getColorInf(inf), CordinateToSquare((char)(findColumn(count+1)+96), findRow(count+1)), makro};
+        
+            PiecesVector->push_back(piece);
+            
+        }
+        count++;
+    }
 }

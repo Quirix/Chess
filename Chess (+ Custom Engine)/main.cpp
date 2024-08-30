@@ -11,6 +11,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <sstream>
 
 #include "Piece.h"
 #include "Square.h"
@@ -132,6 +133,35 @@ int main(){
                 
                     
                 case Event::KeyPressed: {
+                    
+                    if (event.key.code == 56) { // minus (-)
+                        // get board code
+                        std::cout << "code: ";
+                        printBoardCode(Turn);
+                        std::cout << '\n';
+                        
+                        break;
+                    }
+                    
+                    if (event.key.code == 55) { // plus (+)
+                        
+                        std::cout << "enter code >> ";
+                        
+                        std::string s;
+                        
+                        std::getline(cin, s);
+                        
+                        for (auto* e : PiecesVector) {
+                            if (e) delete e;
+                        }
+                                
+                        PiecesVector.clear();
+                        
+                        intBoardToNormal(s, Turn);
+                        
+                        break;
+                    }
+                    
                     if (CanCreate) {
                         int key = event.key.code;
                         
@@ -286,10 +316,10 @@ int main(){
         
         UpdateLegalMoves(lglmv, 61, 6, &vb.history, vb.boardarray, vb.castleSt, true);
         
-        for (auto e : lglmv)
+        /*for (auto e : lglmv)
         {
             std::cout << e << ' ';
-        } std::cout << '\n';
+        } std::cout << '\n';*/
         
         //#####debug######
         

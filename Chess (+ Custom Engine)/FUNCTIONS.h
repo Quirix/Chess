@@ -69,9 +69,11 @@ bool doPieceTypeAllContain(PieceColor, int sqrindex, std::array<int, 64>& intBoa
 
 void putPiecesInBoard();
 
-void UpdateLegalMoves(std::vector<Move>&, Piece*, std::vector<Notate*>*, std::array<int, 2>& cstl=castleState);
+void GenerateMoves(std::vector<Move>&, Piece*, std::vector<Notate*>*, std::array<int, 2>& cstl=castleState);
 
-void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std::array<LNotate, 50>* history, std::array<int, 64>& intBoard, std::array<int, 2>&, bool castlenfuture=false);
+void UpdateLegalMoves(std::vector<Move>&, Piece*, std::vector<Notate*>*, std::array<int, 2>& cstl=castleState, bool pseudo=false);
+
+void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std::array<LNotate, 50>* history, std::array<int, 64>& intBoard, std::array<int, 2>&, bool pseudo=false);
 
 PieceType getTypeInf(int);
 // Inf stands for int form
@@ -91,3 +93,12 @@ void moveInfPiece(std::array<int, 64>& intBoard, const LNotate& nt, std::array<L
 bool checkForCastlingInf(int pos, std::array<int, 64>& intBoard, std::array<LNotate, 50>& history, std::array<int, 2>& castleSt);
 
 Check getCheckState(std::array<int, 64>& intBoard, std::array<LNotate, 50>& history, std::array<int, 2>& castleSt);
+
+std::string getBoardCode();
+std::string getBoardCode(PieceColor turn);
+
+void printBoardCode();
+void printBoardCode(PieceColor turn);
+
+void intBoardToNormal(const std::string& str);
+void intBoardToNormal(const std::string& str, PieceColor& turn);
