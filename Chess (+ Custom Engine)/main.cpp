@@ -285,47 +285,6 @@ int main(){
         // Update
         
         //#####debug######
-        /*VirtualBoard vb{};
-        
-        int pos = 15;
-        
-        vb.putPiece(pos, QUEEN, WHITE);
-        //vb.putPiece(12, PAWN, WHITE);
-        
-        for (auto e : vb.boardarray) {
-            std::cout << e;
-        } std::cout << '\n';
-        std::vector<int> legalMoves{};
-        UpdateLegalMoves(legalMoves, pos, vb.boardarray[pos-1], &vb.history ,vb.boardarray);*/
-        
-        //VirtualBoard vb1;
-        //vb1.putPiece(9, PAWN, WHITE);
-        //moveInfPiece(vb1.boardarray, LNotate{CLASSIC, 1, 9, 1}, vb1.history, vb1.countHistory);
-        //moveInfPiece(vb1.boardarray, LNotate{CLASSIC, 2, 15, 17}, vb1.history, vb1.countHistory);
-        
-        /*for (auto e : vb1.history) {
-            e.print();
-        } std::cout << "\n\n\n";*/
-        
-        //vb1.translateToVirtual(PiecesVector, History);
-        //std::cout << "\n\n\nCANTAKE: " << canTakeBlackKingAll(vb1.boardarray, vb1.history)
-        // << ' ' << canTakeWhiteKingAll(vb1.boardarray, vb1.history) << '\n';
-        
-        //std::cout << "\n\n\n\n\n\n\n\n";
-        
-        VirtualBoard vb;
-        vb.translateToVirtual(PiecesVector, History, castleState);
-        
-        std::vector<int> lglmv;
-        
-        UpdateLegalMoves(lglmv, 61, 6, &vb.history, vb.boardarray, vb.castleSt, true);
-        
-        /*for (auto e : lglmv)
-        {
-            std::cout << e << ' ';
-        } std::cout << '\n';*/
-        
-        //std::cout << "castling: " << castleState[0] << castleState[1] << '\n';
         
         //#####debug######
         

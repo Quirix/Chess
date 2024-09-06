@@ -366,7 +366,7 @@ bool canTakeWhiteKingAll(std::array<int, 64>& intBoard, std::array<LNotate, 50>&
 bool canTakeKingInf(std::array<int, 64>& intBoard, int index, std::array<LNotate, 50>& history, std::array<int, 2>& castleSt) {
     PieceColor clr = getColorInf(intBoard[index-1]);
     std::vector<int> legalmoves;
-    UpdateLegalMoves(legalmoves, index, intBoard[index-1], &history, intBoard, castleSt, true);
+    GenerateMoves(legalmoves, index, intBoard[index-1], &history, intBoard, castleSt);
     
     for (auto e : legalmoves) {
         if ( ( (clr == WHITE) && (intBoard[e-1] == -6) ) || ( (clr == BLACK) && (intBoard[e-1] == 6) ) )
@@ -746,7 +746,7 @@ void GenerateMoves(std::vector<Move>& LegalMoves, Piece* pc, std::vector<Notate*
 
 
 
-void UpdateLegalMoves(std::vector<Move>& LegalMoves, Piece* pc, std::vector<Notate*>* history, std::array<int, 2>& castleSt, bool pseudo) {
+void UpdateLegalMoves(std::vector<Move>& LegalMoves, Piece* pc, std::vector<Notate*>* history, std::array<int, 2>& castleSt) {
     
     PieceColor& piececolor = pc->piececolor;
     PieceType& type = pc->type;
@@ -754,8 +754,6 @@ void UpdateLegalMoves(std::vector<Move>& LegalMoves, Piece* pc, std::vector<Nota
     GenerateMoves(LegalMoves, pc, history, castleSt);
     
     // remove moves that will result in check
-    
-    if (pseudo) return;
     
     VirtualBoard vb;
     
@@ -781,41 +779,8 @@ void UpdateLegalMoves(std::vector<Move>& LegalMoves, Piece* pc, std::vector<Nota
     
 }
 
-// return piece type from int form
-PieceType getTypeInf(int inf) {
+void GenerateMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std::array<LNotate, 50>* history, std::array<int, 64>& intBoard, std::array<int, 2>& castleSt) {
     
-    switch (abs(inf))
-    {
-        case 1: return PAWN; break;
-        case 2: return KNIGHT; break;
-        case 3: return BISHOP; break;
-        case 4: return ROOK; break;
-        case 5: return QUEEN; break;
-        case 6: return KING; break;
-        default: {
-            std::cout << "error inf (int form) from function PieceType getTypeInf(int) is not 1-6 or -1 to -6. (is abs(" << inf << ") or " << inf << '\n';
-            return PAWN;
-        }
-    }
-}
-
-// returns piece color from int form
-PieceColor getColorInf(int inf) {
-    if (inf >= 1) return WHITE;
-    else return BLACK;
-}
-
-Check getCheckState(std::array<int, 64>& intBoard, std::array<LNotate, 50>& history, std::array<int, 2>& castleSt) {
-    
-    if (canTakeWhiteKingAll(intBoard, history, castleSt)) return BLACKTOWHITE;
-    if (canTakeBlackKingAll(intBoard, history, castleSt)) return WHITETOBLACK;
-    return NOCHECK;
-}
-
-// intform stands is piece color and type in integer form
-// (comments how it works in VirtualBoard.hpp)
-void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std::array<LNotate, 50>* history, std::array<int, 64>& intBoard, std::array<int, 2>& castleSt, bool pseudo) {
-
     if (inf == 0) return;
     
     LegalMoves.clear(); // MAY MESSUP WITH BOARDFLIP
@@ -1066,18 +1031,50 @@ void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std
             }
         }
         
-        if (Serious && (Checking == (Check) piececolor) ) // if we are in check
-        {
-            ;
-        }
-        
         for (auto e : legals) {
             if (e != -1) LegalMoves.push_back(e);
         }
         
     }
+}
+
+// return piece type from int form
+PieceType getTypeInf(int inf) {
     
-    if (pseudo) return;
+    switch (abs(inf))
+    {
+        case 1: return PAWN; break;
+        case 2: return KNIGHT; break;
+        case 3: return BISHOP; break;
+        case 4: return ROOK; break;
+        case 5: return QUEEN; break;
+        case 6: return KING; break;
+        default: {
+            std::cout << "error inf (int form) from function PieceType getTypeInf(int) is not 1-6 or -1 to -6. (is abs(" << inf << ") or " << inf << '\n';
+            return PAWN;
+        }
+    }
+}
+
+// returns piece color from int form
+PieceColor getColorInf(int inf) {
+    if (inf >= 1) return WHITE;
+    else return BLACK;
+}
+
+Check getCheckState(std::array<int, 64>& intBoard, std::array<LNotate, 50>& history, std::array<int, 2>& castleSt) {
+    
+    if (canTakeWhiteKingAll(intBoard, history, castleSt)) return BLACKTOWHITE;
+    if (canTakeBlackKingAll(intBoard, history, castleSt)) return WHITETOBLACK;
+    return NOCHECK;
+}
+
+// intform stands is piece color and type in integer form
+// (comments how it works in VirtualBoard.hpp)
+void UpdateLegalMoves(std::vector<int>& LegalMoves, int boardIndex, int inf, std::array<LNotate, 50>* history, std::array<int, 64>& intBoard, std::array<int, 2>& castleSt) {
+
+    PieceColor piececolor = getColorInf(inf);
+    PieceType type = getTypeInf(inf);
     
     // remove moves that will result in check
     
