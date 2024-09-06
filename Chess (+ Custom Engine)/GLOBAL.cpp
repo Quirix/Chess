@@ -14,8 +14,8 @@ bool DissallowLegalMoves = false;
 // current broken :: doesent work
 
 bool TakeTurns = true;
-bool CanCreate = false;
-bool Serious = true; // non-debug
+bool CanCreate = true;
+bool Serious = false; // non-debug
 
 std::array<int, 2> castleState {2, 2};
 

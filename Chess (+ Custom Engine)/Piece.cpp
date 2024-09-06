@@ -359,6 +359,7 @@ void Piece::draw() {
 Piece::~Piece() {
     if (hoveringIconTexture) delete hoveringIconTexture;
     if (rec) delete rec;
+    if (OnSquare) { OnSquare->UpdateHoldingPiece(nullptr); OnSquare = nullptr; }
     if (OnSquare) OnSquare->rec->setFillColor(OnSquare->defaultColor);
     
     hoveringIconTexture = nullptr;

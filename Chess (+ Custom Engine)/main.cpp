@@ -32,6 +32,8 @@ enum ModePlacement {
     FULL
 };
 
+// bug to fix: you can drag two pieces at once if you position your mouse exactly to the sides of two squares
+
 int main(){
     
     RenderWindow window(VideoMode(WindowWidth, WindowHeight), "Chess", Style::Close);
@@ -61,6 +63,8 @@ int main(){
         putPiecesInBoard();
         
     }
+    
+    else putPiecesInBoard();
     
     while (window.isOpen()) {
         Event event;
@@ -137,7 +141,7 @@ int main(){
                     if (event.key.code == 56) { // minus (-)
                         // get board code
                         std::cout << "code: ";
-                        printBoardCode(Turn);
+                        printBoardCode(Turn, castleState);
                         std::cout << '\n';
                         
                         break;
@@ -157,7 +161,7 @@ int main(){
                                 
                         PiecesVector.clear();
                         
-                        intBoardToNormal(s, Turn);
+                        intBoardToNormal(s, Turn, castleState);
                         
                         break;
                     }
@@ -320,6 +324,8 @@ int main(){
         {
             std::cout << e << ' ';
         } std::cout << '\n';*/
+        
+        //std::cout << "castling: " << castleState[0] << castleState[1] << '\n';
         
         //#####debug######
         

@@ -95,10 +95,10 @@ bool checkForCastlingInf(int pos, std::array<int, 64>& intBoard, std::array<LNot
 Check getCheckState(std::array<int, 64>& intBoard, std::array<LNotate, 50>& history, std::array<int, 2>& castleSt);
 
 std::string getBoardCode();
-std::string getBoardCode(PieceColor turn);
+std::string getBoardCode(PieceColor turn, std::array<int, 2> castleSt);
 
 void printBoardCode();
-void printBoardCode(PieceColor turn);
+void printBoardCode(PieceColor turn, std::array<int, 2> castleSt);
 
 void intBoardToNormal(const std::string& str);
-void intBoardToNormal(const std::string& str, PieceColor& turn);
+void intBoardToNormal(const std::string& str, PieceColor& turn, std::array<int, 2>& castleSt);

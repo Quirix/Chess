@@ -1208,7 +1208,7 @@ std::string getBoardCode() {
     return str;
 }
 
-std::string getBoardCode(PieceColor turn) {
+std::string getBoardCode(PieceColor turn, std::array<int, 2> castleSt) {
     VirtualBoard vb;
     vb.translateToVirtual(*PiecesVector, *History, castleState);
     
@@ -1229,6 +1229,15 @@ std::string getBoardCode(PieceColor turn) {
     
     str += ((turn == WHITE) ? "9" : "8");
     
+    ss.str("");
+    ss.clear();
+    chstr.clear();
+    
+    ss << castleSt[0];
+    ss >> chstr;
+    
+    ss >> chstr;
+    
     return str;
 }
 
@@ -1241,7 +1250,7 @@ void printBoardCode() {
     }
 }
 
-void printBoardCode(PieceColor turn) {
+void printBoardCode(PieceColor turn, std::array<int, 2> castleSt) {
     VirtualBoard vb;
     vb.translateToVirtual(*PiecesVector, *History, castleState);
     
@@ -1250,6 +1259,8 @@ void printBoardCode(PieceColor turn) {
     }
     
     std::cout << ((turn == WHITE) ? 9 : 8);
+    
+    std::cout << castleSt[0] << castleSt[1];
 }
 
 void intBoardToNormal(const std::string& s) {
@@ -1295,23 +1306,53 @@ void intBoardToNormal(const std::string& s) {
     }
 }
 
-void intBoardToNormal(const std::string& s, PieceColor& Turn) {
+void intBoardToNormal(const std::string& s, PieceColor& Turn, std::array<int, 2>& castleSt) {
     bool minuscontinue = false;
+    
+    int c1{};
+    int c2{};
     
     std::stringstream ss;
     
     int count = 0;
-    for (auto& e : s) {
+    int realcount = 0;
+    for (auto& e : s) { // auto -> type std::string&
+        realcount++;
         
         if (e == '9' )
         {
             Turn = WHITE;
+            
+            // not very efficient implementation
+            ss.clear();
+            ss.str("");
+            ss << s[s.length()-1];
+            ss >> c1;
+            ss.clear();
+            ss.str("");
+            ss << s[s.length()-2];
+            ss >> c2;
+            ss.clear();
+            ss.str("");
+            
             break;
         }
         
         if (e == '8' )
         {
             Turn = BLACK;
+            
+            ss.clear();
+            ss.str("");
+            ss << s[s.length()-1];
+            ss >> c1;
+            ss.clear();
+            ss.str("");
+            ss << s[s.length()-2];
+            ss >> c2;
+            ss.clear();
+            ss.str("");
+            
             break;
         }
         
@@ -1345,7 +1386,17 @@ void intBoardToNormal(const std::string& s, PieceColor& Turn) {
         
             PiecesVector->push_back(piece);
             
+            
+            
         }
         count++;
     }
+    
+    std::cout << c1 << ' ' << c2 << " \n ";
+    
+    castleSt[0] = c1;
+    castleSt[1] = c2;
+    
+    
+    
 }
