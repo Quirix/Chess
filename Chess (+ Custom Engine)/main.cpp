@@ -32,8 +32,6 @@ enum ModePlacement {
     FULL
 };
 
-// bug to fix: you can drag two pieces at once if you position your mouse exactly to the sides of two squares
-
 int main(){
     
     RenderWindow window(VideoMode(WindowWidth, WindowHeight), "Chess", Style::Close);

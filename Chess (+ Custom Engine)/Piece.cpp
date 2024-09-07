@@ -305,8 +305,22 @@ void Piece::OnMousePress(bool isTurn = true) {
     
     if (isTurn) {
         UpdateLegalMoves(LegalMoves, this, History);
+          
+        bool d = true;
+        
+        for (auto* e : *PiecesVector) {
+            if (e->IsBeingDragged) {
+                d = false;
+                break;
+            }
+        } // to prevent bug where two pieces can be dragged at same time
+        //    if your mouse is at the border of the two
+        
+        if (IsMouseInRec(rec) && d) {
             
-        if (IsMouseInRec(rec)) {
+            
+            
+            
             rec->setOrigin(rec->getSize().x/2, rec->getSize().y/2);
             IsBeingDragged = true;
                 
